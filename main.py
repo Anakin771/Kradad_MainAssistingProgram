@@ -16,6 +16,7 @@ aside Python's built-in files and third-party open-sources)
 import bossStat
 import itemStat
 import playerStat
+import time
 from os import system, name
 # import GUI.mainFrame as Gui
 
@@ -252,6 +253,7 @@ if __name__ == '__main__':
 
         if cmd_input.lower() == "exit":
             print("----** See you soon! **----")
+            time.sleep(3.0)
             break
 
         get_cmd = COMMAND_LIST.get(cmd_input.lower(), lambda: print("There are no such commands."))
