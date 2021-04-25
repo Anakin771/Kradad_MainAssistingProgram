@@ -16,6 +16,7 @@ aside Python's built-in files and third-party open-sources)
 import bossStat
 import itemStat
 import playerStat
+from os import system, name
 # import GUI.mainFrame as Gui
 
 ITEM_TYPE_MAPPING = {
@@ -27,6 +28,13 @@ ITEM_TYPE_MAPPING = {
     "acc": "acc"
 }
 COMMAND_LIST = {}
+
+
+def clear():
+    if name == "nt":
+        _ = system('cls')
+    else:
+        _ = system('clear')
 
 
 def get_int_input(query_txt="Please enter an integer: ", non_zero=False, non_neg=False, no_cancel=False):
@@ -233,6 +241,7 @@ HELP_LIST = {
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    clear()
     print("********************************************************")
     print("Game Kradad - Game Assisting Program (CONSOLE EDITION)")
     print("********************************************************")
