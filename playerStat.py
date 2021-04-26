@@ -166,21 +166,31 @@ def calculate_level_up(char_lv, current_xp, gained_xp):
     new_char_lv = char_lv
     req_xp = cal_req_xp(new_char_lv)
 
-    # For LV 9 and lower, XP Gained is x2
-    gained_xp *= 2 if char_lv < 10 else 1
+    # For LV 10 and lower, XP Gained is x2
+    gained_xp *= 2 if char_lv <= 10 else 1
 
     total_xp = current_xp + gained_xp
+    gained_sp = 0
     while total_xp >= req_xp:
         new_char_lv += 1
         total_xp -= req_xp
         req_xp = cal_req_xp(new_char_lv)
 
+        if new_char_lv % 10 == 0:
+            gained_sp += 2
+        elif new_char_lv % 5 == 0:
+            gained_sp += 1
+
     if new_char_lv > char_lv:
+        if char_lv <= 10:
+            print("(Player with LV 10 or lower gets x2 XP)")
         print("---------------------------------")
         print("You have leveled up!")
         print(f"Your Character's LV: {char_lv} -> {new_char_lv}")
         print(f"Remainder XP: {current_xp} -> {total_xp}")
         print(f"To next LV: {req_xp} XP")
+        if gained_sp > 0:
+            print(f"You received {gained_sp} Skill Point(s).")
         print("---------------------------------")
     else:
         print("---------------------------------")

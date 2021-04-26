@@ -82,8 +82,8 @@ def get_choice_input(choices, query_text="Please pick one from these options", n
     :param query_text: Text for asking the user, default is "Please pick one from these options", it is appended by
     choices and ended with a colon (:)
     :param no_cancel: Specify if the user cannot cancel action, default is False.
-    :param ignore_case: Specify if the options ignore
-    :return:
+    :param ignore_case: Specify if the options ignore letter-casing, default is True.
+    :return: A string of the choice selected, None if the user cancels.
     """
     full_query_text = f"{query_text} - {choices}: "
     if ignore_case:
@@ -93,7 +93,7 @@ def get_choice_input(choices, query_text="Please pick one from these options", n
     while True:
         in_txt = input(full_query_text)
         if ignore_case:
-            in_txt.lower()
+            in_txt = in_txt.lower()
         if in_txt == "" and not no_cancel:
             print("\n-- Action Canceled --")
             return None
@@ -123,10 +123,15 @@ def generate_boss():
     if boss_qty is None:
         return None
 
+    difficulty = get_choice_input(["Noob", "Easy", "Normal", "Hard", "Hardcore"],
+                                  "Step 4 - Please select the difficulty")
+    if difficulty is None:
+        return None
+
     if boss_qty == 1:
-        bossStat.random_boss_stat(avg_lv, p_num)
+        bossStat.random_boss_stat(avg_lv, p_num, diff=difficulty)
     else:
-        bossStat.random_boss_stat_multi(avg_lv, p_num, boss_qty)
+        bossStat.random_boss_stat_multi(avg_lv, p_num, boss_qty, diff=difficulty)
 
 
 def generate_boss_item():
@@ -142,7 +147,7 @@ def generate_boss_item():
         ["Weapon", "wpn", "Armor", "amr", "Accessories", "acc"],
         "Step 2 - Please enter boss' item type"
     )
-    if not item_type_in:
+    if item_type_in is None:
         return None
 
     item_type = ITEM_TYPE_MAPPING.get(item_type_in)
@@ -218,8 +223,8 @@ def cmd_help():
     """
     print("List of all possible commands:")
     for cmd, info in HELP_LIST.items():
-        print(f"{cmd}\t\t{info}")
-    print("exit\t\tExit the Program.")
+        print(f"{cmd}\t{info}")
+    print("exit\tExit the Program.")
 
 
 COMMAND_LIST.update({
