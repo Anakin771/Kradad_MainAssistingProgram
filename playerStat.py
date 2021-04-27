@@ -190,7 +190,7 @@ def calculate_level_up(char_lv, current_xp, gained_xp):
         print(f"Remainder XP: {current_xp} -> {total_xp}")
         print(f"To next LV: {req_xp} XP")
         if gained_sp > 0:
-            print(f"You received {gained_sp} Skill Point(s).")
+            print(f"You have received {gained_sp} Skill Point(s).")
         print("---------------------------------")
     else:
         print("---------------------------------")

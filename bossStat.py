@@ -91,6 +91,19 @@ def random_boss_stat(party_avg_lv, player_num, diff=None, show_stat=True):
     # Calculate Real Boss LV
     boss_lv = party_avg_lv + lv_diff_rate
 
+    # If calculated LV is 0 or less, flag an error an find the floor difficulty for that party.
+    if boss_lv <= 0:
+        least_diff = ""
+        for diff_name, lv in DIFF_TO_LV_MAPPING.items():
+            if party_avg_lv + lv > 0:
+                least_diff = diff_name
+                break
+
+        print("Error: Too low difficulty!")
+        print(f"For LV {party_avg_lv} party, "
+              f"Boss Difficulty must be at least on {least_diff.capitalize()}.")
+        return None
+
     # Determine Boss' HP
     if boss_lv <= 30:
         boss_hp = (party_avg_lv + hp_diff_rate) * player_num * EARLY_BOSS_HP_MTP
@@ -184,6 +197,31 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
     # Find Bosses' Real LV
     boss_lv = party_avg_lv + lv_diff_rate
 
+    # If calculated LV is 0 or less, flag an error an find the floor difficulty for that party.
+    if boss_lv <= 0:
+        least_diff = ""
+        for diff_name, lv in DIFF_TO_LV_MAPPING.items():
+            if party_avg_lv + lv > 0:
+                least_diff = diff_name
+                break
+
+        print("Error: Too low difficulty!")
+        print(f"For LV {party_avg_lv} party,"
+              f"Boss Difficulty must be at least on {least_diff.capitalize()}.")
+        return None
+
+    # Calculate XP Reward
+    xp_reward = boss_lv * XP_MULTIPLIER
+
+    # Get Boss Coin Reward Difficulty Rate
+    money_diff_rate = DIFF_TO_COIN_MAPPING.get(diff, 0)
+
+    # Get Boss Item Reward Difficulty Rate
+    item_reward = DIFF_TO_ITEM_MAPPING.get(diff, 0)
+
+    # Calculate Money Reward
+    money_reward = (party_avg_lv + money_diff_rate) * MONEY_MULTIPLIER
+
     # Determine Bosses' HP
     if boss_lv <= 30:
         boss_hp = int(((party_avg_lv + hp_diff_rate) * player_num * EARLY_BOSS_HP_MTP) / 3)
@@ -229,8 +267,17 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
                 else:
                     print(f"{stat}: {value}")
 
-            print("\n")
+            print()
             boss_count += 1
+        print("-------------------------------------------------")
+        print("Rewards* :")
+        print(
+            f" • {xp_reward} XP\n"
+            f" • {money_reward} (C)\n"
+            f" • {item_reward} Item(s)\n"
+        )
+        print("* Rewards on a scenario case that no one died,\n"
+              "and no +20% Bonus from declining dropped item.\n")
         print("**********************************************")
 
     return boss_list
