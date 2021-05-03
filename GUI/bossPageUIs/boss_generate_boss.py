@@ -6,7 +6,8 @@ Author: MontyGUI
 Description
 This script extends bossPage.py,
 it includes the layout and functions of the interface
-generates a boss fight.
+that generates a boss fight.
+
 ***********************************************
 """
 import tkinter as tk
@@ -14,6 +15,7 @@ from tkinter import ttk
 
 # Non-Builtin Imports
 from GUI.bossPageUIs.boss_boss_input import *
+from GUI.bossPageUIs.boss_cal_reward import *
 
 
 class GenerateBossUI:
@@ -27,16 +29,28 @@ class GenerateBossUI:
         self.header_frame.grid(column=0, row=0)
         # Heading Text
         ttk.Label(self.header_frame, text="Generate Boss Fight", style="tab_header.TLabel").grid(column=0, row=0)
-        ttk.Label(self.header_frame, text="Let the game begin!", style="tab_subtitle.TLabel")\
+        ttk.Label(self.header_frame, text="... and let the game begin!", style="tab_subtitle.TLabel")\
             .grid(column=1, row=0, sticky="s", padx=10, pady=5)
 
         # Content Frame
         self.content_frame = ttk.Label(self.frame)
         self.content_frame.grid(column=0, row=1)
 
-        # Content - Input Section
-        self.boss_input_frame = ttk.Frame(self.content_frame)
+        # Upper Content Frame
+        self.upper_content_frame = ttk.Frame(self.content_frame)
+        self.upper_content_frame.grid(column=0, row=0, pady=10)
+
+        # Upper Content - Input Section
+        self.boss_input_frame = ttk.Frame(self.upper_content_frame)
         self.boss_input_frame.grid(column=0, row=0)
-        self.boss_input = BossInputUI(self.content_frame, self.boss_input_frame)
+        self.boss_input = BossInputUI(self.upper_content_frame, self.boss_input_frame)
+
+        # Upper Separator
+        ttk.Separator(self.upper_content_frame, orient="vertical").grid(column=1, row=0, padx=15, sticky="ns")
+
+        # Upper Content - Rewards Calculations & Display
+        self.boss_reward_frame = ttk.Frame(self.upper_content_frame)
+        self.boss_reward_frame.grid(column=2, row=0)
+        self.boss_reward = RewardCalculationUI(self.upper_content_frame, self.boss_reward_frame)
 
         # TODO: Co-Link Boss-Input to Reward-Cal and Boss-Display

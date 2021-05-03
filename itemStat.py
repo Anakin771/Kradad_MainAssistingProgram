@@ -13,14 +13,14 @@ generating items, including stats randomization, item crafting, etc.
 import random
 
 QUALITY_MAPPING = {}
-QUALITY_MAPPING.update(dict.fromkeys([1, 2, 3, 18, 19, 20], -2))
+QUALITY_MAPPING.update(dict.fromkeys([1, 2, 3, 18, 19, 20], -7))
 QUALITY_MAPPING.update(dict.fromkeys(range(6, 16), 0))
-QUALITY_MAPPING.update(dict.fromkeys([4, 5, 16, 17], 2))
+QUALITY_MAPPING.update(dict.fromkeys([4, 5, 16, 17], 7))
 
 QUALITY_TEXT_MAPPING = {
-    -2: "BAD",
+    -7: "BAD",
     0: "NORMAL",
-    2: "GREAT"
+    7: "GREAT"
 }
 
 MATERIAL_TYPE_MAPPING = {
@@ -56,10 +56,10 @@ def random_item_stat(item_lv, item_type=None, quality_rate=None, show_stat=True)
         quality_rate = 0
         quality_text = ""
     else:
-        quality_text = f"{QUALITY_TEXT_MAPPING.get(quality_rate, None)} QUALITY "
-        if quality_text is None:
+        if QUALITY_TEXT_MAPPING.get(quality_rate, None) is None:
             print("Sorry, you do not input the right quality rate!")
             return None
+        quality_text = f"{QUALITY_TEXT_MAPPING.get(quality_rate, None)} QUALITY "
 
     # Set the number of Stat Roll: Item's LV * 5 for LV 1-9, and Item's LV for LV 10+
     # Also, if the item has quality rate, it is also added to the roll point here
@@ -106,12 +106,12 @@ def random_item_stat(item_lv, item_type=None, quality_rate=None, show_stat=True)
         item_type_text = f"{ITEM_TYPE_MAPPING.get(item_type).upper()} - " if item_type is not None else ""
 
         print("---------------------------------")
-        print(f"ITEM STAT POINTS\n({quality_text}{item_type_text}LV. {item_lv})")
-        print(f"HP: +{item_hp} pts.")
-        print(f"P. ATK: +{item_patk} pts.")
-        print(f"M. ATK: +{item_matk} pts.")
-        print(f"P. DEF: +{int(item_pdef)} pts.")
-        print(f"M. DEF: +{int(item_mdef)} pts.")
+        print(f" ITEM STAT POINTS\n({quality_text}{item_type_text}LV. {item_lv})")
+        print(f" HP: +{item_hp} pts.")
+        print(f" P. ATK: +{item_patk} pts.")
+        print(f" M. ATK: +{item_matk} pts.")
+        print(f" P. DEF: +{int(item_pdef)} pts.")
+        print(f" M. DEF: +{int(item_mdef)} pts.")
         print("---------------------------------")
 
     # Return Item's Stat Points as a dictionary

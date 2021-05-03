@@ -32,14 +32,26 @@ class MainUI:
 
         # Main Page Notebook
         self.main_book = ttk.Notebook(self.root)
+        self.main_book.pack(fill="both", expand=True)
 
         # Main Page Category
+
         # Player TODO: Build player page with functionality similar to playerStat.py
-        self.player_page_frame = ttk.Frame(self.root)
-        self.player_page = PlayerPage(self.root, self.root, self.player_page_frame)
+        self.player_page_frame = ttk.Frame(self.main_book)
+        self.player_page = PlayerPage(self.root, self.main_book, self.player_page_frame)
+        self.player_page_frame.pack(fill="both", expand=True)
+        # self.player_page_frame.grid()
+        # self.player_page_frame.rowconfigure('all', weight=1)
+        # self.player_page_frame.columnconfigure('all', weight=1)
+
         # Boss TODO: Build boss page with functionality similar to bossStat.py
-        self.boss_page_frame = ttk.Frame(self.root)
-        self.boss_page = BossPage(self.root, self.boss_page_frame)
+        self.boss_page_frame = ttk.Frame(self.main_book)
+        self.boss_page = BossPage(self.main_book, self.boss_page_frame)
+        self.boss_page_frame.pack(fill="both", expand=True)
+        # self.boss_page_frame.grid()
+        # self.boss_page_frame.rowconfigure('all', weight=1)
+        # self.boss_page_frame.columnconfigure('all', weight=1)
+
         # Item TODO: Build item page with functionality similar to itemStat.py
 
         # TODO: Add each frame in the Main Page Category section into the Notebook
@@ -48,5 +60,4 @@ class MainUI:
         # main_book.add(item_page, text="Item")
 
     def run(self):
-        self.main_book.pack(fill="both", expand=1)
         self.root.mainloop()

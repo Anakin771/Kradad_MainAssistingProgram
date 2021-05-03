@@ -24,27 +24,52 @@ class BossInputUI:
 
         # Party's Average LV
         # Label
-        ttk.Label(self.frame, text="Party's Average LV: ").grid(column=0, row=0)
+        ttk.Label(self.frame, text="Party's Average LV: ", style="category_txt.TLabel").grid(column=0, row=0)
         # Input Spinbox
-        pal_init = tk.StringVar(self.frame)
-        pal_init.set("1")
-        self.party_avg_lv_box = ttk.Spinbox(self.frame, from_=1, to=sys.maxsize, textvariable=pal_init)
-        self.party_avg_lv_box.grid(column=1, row=0)
+        self.pal_init = tk.StringVar(self.frame)
+        self.pal_init.set("1")
+        self.party_avg_lv_box = ttk.Spinbox(self.frame, from_=1, to=sys.maxsize, textvariable=self.pal_init)
+        self.party_avg_lv_box.grid(column=1, row=0, padx=10, pady=5)
 
         # Party Size
         # Label
-        ttk.Label(self.frame, text="Party Size: ").grid(column=0, row=1)
+        ttk.Label(self.frame, text="Party Size: ", style="category_txt.TLabel").grid(column=0, row=1)
         # Input Spinbox
-        ps_init = tk.StringVar(self.frame)
-        ps_init.set("1")
-        self.party_size_box = ttk.Spinbox(self.frame, from_=1, to=sys.maxsize, textvariable=ps_init)
-        self.party_size_box.grid(column=1, row=1)
+        self.ps_init = tk.StringVar(self.frame)
+        self.ps_init.set("1")
+        self.party_size_box = ttk.Spinbox(
+            self.frame,
+            from_=1,
+            to=sys.maxsize,
+            textvariable=self.ps_init
+        )
+        self.party_size_box.grid(column=1, row=1, padx=10, pady=5)
 
         # Boss Number
         # Label
-        ttk.Label(self.frame, text="No. of Bosses: ").grid(column=0, row=2)
+        ttk.Label(self.frame, text="No. of Bosses: ", style="category_txt.TLabel").grid(column=0, row=2)
         # Input Spinbox
-        bn_init = tk.StringVar(self.frame)
-        bn_init.set("1")
-        self.party_avg_lv_box = ttk.Spinbox(self.frame, from_=1, to=sys.maxsize, textvariable=bn_init)
-        self.party_avg_lv_box.grid(column=1, row=2)
+        self.bn_init = tk.StringVar(self.frame)
+        self.bn_init.set("1")
+        self.boss_n_box = ttk.Spinbox(
+            self.frame,
+            from_=1,
+            to=sys.maxsize,
+            textvariable=self.bn_init
+        )
+        self.boss_n_box.grid(column=1, row=2, padx=10, pady=5)
+
+        # Boss Difficulty
+        # Label
+        ttk.Label(self.frame, text="Difficulty: ", style="category_txt.TLabel").grid(column=0, row=3)
+        # Input Combobox
+        self.boss_difficulty_box = ttk.Combobox(
+            self.frame,
+            value=("Noob", "Easy", "Normal", "Hard", "Hardcore")
+        )
+        self.boss_difficulty_box.current(2)
+        self.boss_difficulty_box.grid(column=1, row=3, padx=10, pady=5)
+
+        self.party_avg_lv_box.configure(font=("Helvetica", 11, "bold"))
+        self.party_size_box.configure(font=("Helvetica", 11, "bold"))
+        self.boss_n_box.configure(font=("Helvetica", 11, "bold"))

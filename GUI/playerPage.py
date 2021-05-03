@@ -25,8 +25,8 @@ class PlayerPage:
         # Widget Framework
 
         # Container Frame
-        self.container = ttk.Frame(self.frame)
-        self.container.pack(padx=10, pady=10, fill="both")
+        self.container = ttk.Frame(self.frame, relief="groove", borderwidth=3)
+        self.container.pack(ipadx=10, ipady=20, padx=10, pady=10)
 
         # New Character Section
         self.new_char_frame = ttk.Frame(self.container)

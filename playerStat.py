@@ -29,6 +29,14 @@ DEFAULT_STARTING_MTP = 5
 DEFAULT_BONUS_BASE_ROLL = 20
 DEFAULT_BONUS_MTP = 5
 
+EARLY_REQ_XP_RATE = 1.5
+MID_REQ_XP_RATE = 1.65
+LATE_REQ_XP_RATE = 1.8
+
+ITEM_DECLINED_BONUS_MTP = 1.2
+
+FALLEN_ALLY_PENALTY = 0.1
+
 
 def random_char_stat_single(base_roll_point, multiplier, header_text="", show_stat=True):
     """
@@ -71,12 +79,12 @@ def random_char_stat_single(base_roll_point, multiplier, header_text="", show_st
 
     if show_stat:
         print("-----------------------------")
-        print(f"HP: {hp} pts.")
-        print(f"P. ATK: {p_atk} pts.")
-        print(f"M. ATK: {m_atk} pts.")
-        print(f"P. DEF: {p_def} pts.")
-        print(f"M. DEF: {m_def} pts.")
-        print(f"FREE: {free_stat} pts.")
+        print(f" HP: {hp} pts.")
+        print(f" P. ATK: {p_atk} pts.")
+        print(f" M. ATK: {m_atk} pts.")
+        print(f" P. DEF: {p_def} pts.")
+        print(f" M. DEF: {m_def} pts.")
+        print(f" FREE: {free_stat} pts.")
         print("-----------------------------")
 
     return {
@@ -148,13 +156,13 @@ def random_starting_char():
           "       YOUR STATS:     \n"
           "***********************\n")
 
-    print("Starting Stat Points:")
+    print(" Starting Stat Points:")
     for stat, pts in starting.items():
-        print(f"{stat}: {pts} pts.")
+        print(f" {stat}: {pts} pts.")
     print("----------------------")
-    print("Bonus Rate Points:")
+    print(" Bonus Rate Points:")
     for stat, pts in bonus.items():
-        print(f"{stat}: {pts} pts.")
+        print(f" {stat}: {pts} pts.")
 
     return {
         "starting": starting,
@@ -162,14 +170,21 @@ def random_starting_char():
     }
 
 
-def calculate_level_up(char_lv, current_xp, gained_xp):
+def calculate_level_up(char_lv, current_xp, gained_xp, fallen=0, item_accepted=True, show_stat=True):
     new_char_lv = char_lv
     req_xp = cal_req_xp(new_char_lv)
+
+    # Reduce gained XP due to fallen party member
+    fallen_penalty_rate = 1 - (fallen * FALLEN_ALLY_PENALTY)
+    gained_xp = max(gained_xp * fallen_penalty_rate, 0)
+
+    # +20% XP bonus for players who declined dropped item
+    gained_xp *= ITEM_DECLINED_BONUS_MTP if not item_accepted else 1
 
     # For LV 10 and lower, XP Gained is x2
     gained_xp *= 2 if char_lv <= 10 else 1
 
-    total_xp = current_xp + gained_xp
+    total_xp = current_xp + int(rounder.round_basic(gained_xp))
     gained_sp = 0
     while total_xp >= req_xp:
         new_char_lv += 1
@@ -181,28 +196,54 @@ def calculate_level_up(char_lv, current_xp, gained_xp):
         elif new_char_lv % 5 == 0:
             gained_sp += 1
 
-    if new_char_lv > char_lv:
+    if show_stat:
         if char_lv <= 10:
-            print("(Player with LV 10 or lower gets x2 XP)")
-        print("---------------------------------")
-        print("You have leveled up!")
-        print(f"Your Character's LV: {char_lv} -> {new_char_lv}")
-        print(f"Remainder XP: {current_xp} -> {total_xp}")
-        print(f"To next LV: {req_xp} XP")
-        if gained_sp > 0:
-            print(f"You have received {gained_sp} Skill Point(s).")
-        print("---------------------------------")
-    else:
-        print("---------------------------------")
-        print("Sorry, but you did not level up...")
-        print(f"Your Current XP: {current_xp} -> {total_xp}")
-        print("---------------------------------")
+            print(" (Player with LV 10 or lower gets x2 XP)")
+        if fallen > 0:
+            print(f" ({fallen} Party member(s) have fallen, -{min(int(fallen * 10), 100)}% XP Penalty)")
+        if not item_accepted:
+            print(f" (Item Declined: +{int(rounder.round_basic((ITEM_DECLINED_BONUS_MTP - 1) * 100))}% XP)")
+        if gained_xp <= 0 < fallen:
+            print(
+                "--------------------------------\n"
+                " Too many players have fallen!\n"
+                " You do not gain any XP...\n"
+                "--------------------------------\n"
+            )
+        elif new_char_lv > char_lv:
+            print("---------------------------------")
+            print(" You have leveled up!")
+            print(f" Your Character's LV: {char_lv} -> {new_char_lv}")
+            print(f" Remainder XP: {current_xp} -> {total_xp}")
+            print(f" To next LV: {req_xp} XP")
+            if gained_sp > 0:
+                print(f" You have received {gained_sp} Skill Point(s).")
+            print("---------------------------------")
+        else:
+            print("---------------------------------")
+            print(" Sorry, but you did not level up...")
+            print(f" Your Current XP: {current_xp} -> {total_xp}")
+            print("---------------------------------")
+
+    return {
+        "lv_up": bool(new_char_lv > char_lv),
+        "item_decl": bool(not item_accepted),
+        "fallen_penalty": min(int(fallen * 10), 100),
+        "old": {
+            "lv": char_lv,
+            "rex_xp": current_xp
+        },
+        "new": {
+            "lv": new_char_lv,
+            "rem_xp": total_xp
+        }
+    }
 
 
 def cal_req_xp(char_lv):
     if char_lv <= 30:
-        return int(rounder.round_basic(100 * (char_lv ** 1.5), -2))
+        return int(rounder.round_basic(100 * (char_lv ** EARLY_REQ_XP_RATE), -2))
     elif char_lv <= 60:
-        return int(rounder.round_basic(100 * (char_lv ** 1.65), -2))
+        return int(rounder.round_basic(100 * (char_lv ** MID_REQ_XP_RATE), -2))
     else:
-        return int(rounder.round_basic(100 * (char_lv ** 1.8), -2))
+        return int(rounder.round_basic(100 * (char_lv ** LATE_REQ_XP_RATE), -2))

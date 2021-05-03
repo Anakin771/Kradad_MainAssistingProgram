@@ -14,6 +14,13 @@ from tkinter import ttk
 import sys
 
 # Non-builtin Imports:
+# import ...
+
+TXT_TO_BOOL_ITEM_BONUS_MAPPING = {
+    "accepted": True,
+    "declined": False,
+    "none": True
+}
 
 
 class LevelUpInputUI:
@@ -77,35 +84,51 @@ class LevelUpInputUI:
 
         # Dropped Item Options
         # Header
-        ttk.Label(self.frame, text="Dropped Item: ", style="lu_category.TLabel").grid(column=0, row=3)
+        ttk.Label(self.frame, text="Dropped Item: ", style="lu_category.TLabel").grid(column=0, row=3, pady=5)
         # Radio Buttons Frame
         self.drp_itm_rd_frame = ttk.Frame(self.frame, relief="groove")
-        self.drp_itm_rd_frame.grid(column=1, row=3, padx=10, pady=5)
+        self.drp_itm_rd_frame.grid(column=0, columnspan=2, row=4, padx=20, pady=3)
 
         # Radio Buttons
         # Option Variable
-        self.item_accepted = tk.StringVar(self.frame, "1")
+        self.item_accepted = tk.StringVar(self.frame, "accepted")
         # Item Accepted
         self.drp_itm_acc = ttk.Radiobutton(
             self.drp_itm_rd_frame,
             variable=self.item_accepted,
             text="Accept",
-            value="1"
+            value="accepted"
         )
-        self.drp_itm_acc.grid(column=0, row=0, padx=15, pady=2)
+        self.drp_itm_acc.grid(column=0, row=0, padx=10, pady=5)
         # Item Declined
         self.drp_itm_decl = ttk.Radiobutton(
             self.drp_itm_rd_frame,
             variable=self.item_accepted,
             text="Decline",
-            value="0"
+            value="declined"
         )
-        self.drp_itm_decl.grid(column=0, row=1, padx=15, pady=2)
+        self.drp_itm_decl.grid(column=1, row=0, padx=10, pady=5)
+        # No Item (Boss Rewards 0 items)
+        self.drp_no_item = ttk.Radiobutton(
+            self.drp_itm_rd_frame,
+            variable=self.item_accepted,
+            text="No Item*",
+            value="none"
+        )
+        self.drp_no_item.grid(column=2, row=0, padx=10, pady=5)
+
+        # No Item Footnote
+        ttk.Label(self.frame, text="* Select this if the boss drops no item as a reward.")\
+            .grid(column=0, columnspan=2, row=5, pady=3)
+
+        # Form/Button Separator
+        ttk.Separator(self.frame).grid(column=0, columnspan=2, row=6, pady=6, sticky="we")
 
         # Clear Button
-        self.clear_btn = ttk.Button(self.frame, text="Clear", width=14)
-        self.clear_btn.grid(column=0, row=4, pady=10, ipady=4)
+        self.clear_btn = ttk.Button(self.frame, text="Clear", width=20)
+        self.clear_btn.grid(column=0, row=7, pady=8, ipady=4)
 
         # Calculate Button
-        self.calculate_btn = ttk.Button(self.frame, text="Calculate!", width=14)
-        self.calculate_btn.grid(column=1, row=4, pady=10, ipady=4)
+        self.calculate_btn = ttk.Button(self.frame, text="Calculate!", width=20)
+        self.calculate_btn.grid(column=1, row=7, pady=8, ipady=4)
+

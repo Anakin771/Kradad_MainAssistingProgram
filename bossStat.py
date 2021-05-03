@@ -148,24 +148,24 @@ def random_boss_stat(party_avg_lv, player_num, diff=None, show_stat=True):
     # Show stats if set enabled
     if show_stat:
         print("-------------------------------------------------")
-        print(f"BOSS - LV. {boss_lv}")
+        print(f" BOSS - LV. {boss_lv}")
         if input_diff:
-            print(f"{diff.upper()} DIFFICULTY")
+            print(f" {diff.upper()} DIFFICULTY")
         print()
-        print("STATS:")
-        print(f"HP: {boss_hp}")
-        print(f"P. ATK: {boss_patk}")
-        print(f"M. ATK: {boss_matk}")
-        print(f"P. DEF: {int(boss_pdef / 2)}")
-        print(f"M. DEF: {int(boss_mdef / 2)}")
+        print(" STATS:")
+        print(f" HP: {boss_hp}")
+        print(f" P. ATK: {boss_patk}")
+        print(f" M. ATK: {boss_matk}")
+        print(f" P. DEF: {int(boss_pdef / 2)}")
+        print(f" M. DEF: {int(boss_mdef / 2)}")
         print("-------------------------------------------------")
-        print("Rewards* :")
+        print(" Rewards* :")
         print(
-            f" • {xp_reward} XP\n"
-            f" • {money_reward} (C)\n"
-            f" • {item_reward} Item(s)\n"
+            f"  • {xp_reward} XP\n"
+            f"  • {money_reward} (C)\n"
+            f"  • {item_reward} Item(s)\n"
         )
-        print("* Rewards on a scenario case that no one died,\n"
+        print(" * Rewards on a scenario case that no one died,\n"
               "and no +20% Bonus from declining dropped item.")
         print("-------------------------------------------------")
 
@@ -205,9 +205,9 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
                 least_diff = diff_name
                 break
 
-        print("Error: Too low difficulty!")
-        print(f"For LV {party_avg_lv} party,"
-              f"Boss Difficulty must be at least on {least_diff.capitalize()}.")
+        print(" Error: Too low difficulty!")
+        print(f" For LV {party_avg_lv} party,"
+              f" Boss Difficulty must be at least on {least_diff.capitalize()}.")
         return None
 
     # Calculate XP Reward
@@ -253,30 +253,30 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
         boss_count = 1
 
         print("**********************************************")
-        print("   -------- MULTI-BOSS FIGHT --------    ")
+        print("     -------- MULTI-BOSS FIGHT --------    ")
         if input_diff:
-            print(f"{diff.upper()} DIFFICULTY")
+            print(f" {diff.upper()} DIFFICULTY")
         print()
         for boss in boss_list:
-            print(f"Boss #{boss_count} Stats:")
+            print(f" Boss #{boss_count} Stats:")
             for stat, value in boss.items():
                 if stat == "LV":
-                    print(f"LV. {value}")
+                    print(f" LV. {value}")
                 elif stat == "PDEF" or stat == "MDEF":
-                    print(f"{stat}: {int(value / 2)}")
+                    print(f" {stat}: {int(value / 2)}")
                 else:
-                    print(f"{stat}: {value}")
+                    print(f" {stat}: {value}")
 
             print()
             boss_count += 1
         print("-------------------------------------------------")
-        print("Rewards* :")
+        print(" Rewards* :")
         print(
-            f" • {xp_reward} XP\n"
-            f" • {money_reward} (C)\n"
-            f" • {item_reward} Item(s)\n"
+            f"  • {xp_reward} XP\n"
+            f"  • {money_reward} (C)\n"
+            f"  • {item_reward} Item(s)\n"
         )
-        print("* Rewards on a scenario case that no one died,\n"
+        print(" * Rewards on a scenario case that no one died,\n"
               "and no +20% Bonus from declining dropped item.\n")
         print("**********************************************")
 
