@@ -83,14 +83,15 @@ class LevelUpDisplayUI:
         # END IN RESULTS LABEL FRAME
 
         # Footnotes
-        # Declining Item 20% XP Bonus Text
-        self.itm_decl_bonus_txt = ttk.Label(
+        # -10% XP Penalty Text
+        self.fallen_penalty_txt = ttk.Label(
             self.frame,
-            text=" * Item Declined: +20% XP Bonus",
+            text=" * N Party member(s) have fallen: -10N% XP Penalty",
             style="lu_footnote.TLabel"
         )
-        self.itm_decl_bonus_txt.grid(column=0, row=1, sticky="w")
-        self.itm_decl_bonus_txt.grid_forget()
+        self.fallen_penalty_txt.configure(foreground="red")
+        self.fallen_penalty_txt.grid(column=0, row=1, sticky="w")
+        self.fallen_penalty_txt.grid_forget()
 
         # LV 1-10 Double XP Bonus Text
         self.double_xp_txt = ttk.Label(
@@ -100,6 +101,15 @@ class LevelUpDisplayUI:
         )
         self.double_xp_txt.grid(column=0, row=2, sticky="w")
         self.double_xp_txt.grid_forget()
+
+        # Declining Item 20% XP Bonus Text
+        self.itm_decl_bonus_txt = ttk.Label(
+            self.frame,
+            text=" * Item Declined: +20% XP Bonus",
+            style="lu_footnote.TLabel"
+        )
+        self.itm_decl_bonus_txt.grid(column=0, row=3, sticky="w")
+        self.itm_decl_bonus_txt.grid_forget()
 
     def hide_new_level_line(self):
         self.lvl_head.grid_forget()

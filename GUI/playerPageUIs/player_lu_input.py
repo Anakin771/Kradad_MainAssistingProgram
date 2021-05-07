@@ -29,6 +29,8 @@ class LevelUpInputUI:
         self.frame = frame
         self.lvl_display_ui = lvl_display_ui
 
+        input_fonts = ("Helvetica", 11, "bold")
+
         # Category Texts
 
         # Current LV
@@ -37,6 +39,8 @@ class LevelUpInputUI:
         ttk.Label(self.frame, text="Remainder XP: ", style="lu_category.TLabel").grid(column=0, row=1)
         # Gained XP
         ttk.Label(self.frame, text="Gained XP: ", style="lu_category.TLabel").grid(column=0, row=2)
+        # Fallen Ally
+        ttk.Label(self.frame, text="No. of Fallen Ally: ", style="lu_category.TLabel").grid(column=0, row=3)
 
         # Input Boxes
         # Current LV Initial Value
@@ -78,16 +82,30 @@ class LevelUpInputUI:
         )
         self.gained_xp_box.grid(column=1, row=2, padx=15, pady=5)
 
-        self.current_lv_box.configure(font=("Helvetica", 11, "bold"))
-        self.rem_xp_box.configure(font=("Helvetica", 11, "bold"))
-        self.gained_xp_box.configure(font=("Helvetica", 11, "bold"))
+        # Fallen Ally Initial Input
+        self.fallen_init = tk.StringVar(self.frame)
+        self.fallen_init.set("0")
+        # Fallen Ally Input
+        self.fallen_box = ttk.Spinbox(
+            self.frame,
+            from_=0,
+            to=sys.maxsize,
+            width=10,
+            textvariable=self.fallen_init
+        )
+        self.fallen_box.grid(column=1, row=3, padx=15, pady=5)
+
+        self.current_lv_box.configure(font=input_fonts)
+        self.rem_xp_box.configure(font=input_fonts)
+        self.gained_xp_box.configure(font=input_fonts)
+        self.fallen_box.configure(font=input_fonts)
 
         # Dropped Item Options
         # Header
-        ttk.Label(self.frame, text="Dropped Item: ", style="lu_category.TLabel").grid(column=0, row=3, pady=5)
+        ttk.Label(self.frame, text="Dropped Item: ", style="lu_category.TLabel").grid(column=0, row=4, pady=5)
         # Radio Buttons Frame
         self.drp_itm_rd_frame = ttk.Frame(self.frame, relief="groove")
-        self.drp_itm_rd_frame.grid(column=0, columnspan=2, row=4, padx=20, pady=3)
+        self.drp_itm_rd_frame.grid(column=0, columnspan=2, row=5, padx=20, pady=3)
 
         # Radio Buttons
         # Option Variable
@@ -119,16 +137,16 @@ class LevelUpInputUI:
 
         # No Item Footnote
         ttk.Label(self.frame, text="* Select this if the boss drops no item as a reward.")\
-            .grid(column=0, columnspan=2, row=5, pady=3)
+            .grid(column=0, columnspan=2, row=6, pady=3)
 
         # Form/Button Separator
-        ttk.Separator(self.frame).grid(column=0, columnspan=2, row=6, pady=6, sticky="we")
+        ttk.Separator(self.frame).grid(column=0, columnspan=2, row=7, pady=6, sticky="we")
 
         # Clear Button
         self.clear_btn = ttk.Button(self.frame, text="Clear", width=20)
-        self.clear_btn.grid(column=0, row=7, pady=8, ipady=4)
+        self.clear_btn.grid(column=0, row=8, pady=8, ipady=4)
 
         # Calculate Button
         self.calculate_btn = ttk.Button(self.frame, text="Calculate!", width=20)
-        self.calculate_btn.grid(column=1, row=7, pady=8, ipady=4)
+        self.calculate_btn.grid(column=1, row=8, pady=8, ipady=4)
 

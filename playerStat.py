@@ -197,12 +197,20 @@ def calculate_level_up(char_lv, current_xp, gained_xp, fallen=0, item_accepted=T
             gained_sp += 1
 
     if show_stat:
+        extra_cal = False
+
         if char_lv <= 10:
             print(" (Player with LV 10 or lower gets x2 XP)")
+            extra_cal = True
+
         if fallen > 0:
             print(f" ({fallen} Party member(s) have fallen, -{min(int(fallen * 10), 100)}% XP Penalty)")
+            extra_cal = True
+
         if not item_accepted:
             print(f" (Item Declined: +{int(rounder.round_basic((ITEM_DECLINED_BONUS_MTP - 1) * 100))}% XP)")
+            extra_cal = True
+
         if gained_xp <= 0 < fallen:
             print(
                 "--------------------------------\n"
@@ -224,6 +232,9 @@ def calculate_level_up(char_lv, current_xp, gained_xp, fallen=0, item_accepted=T
             print(" Sorry, but you did not level up...")
             print(f" Your Current XP: {current_xp} -> {total_xp}")
             print("---------------------------------")
+
+        if extra_cal:
+            print(" * Bonus Calculation goes from top to bottom.")
 
     return {
         "lv_up": bool(new_char_lv > char_lv),

@@ -70,6 +70,15 @@ class BossInputUI:
         self.boss_difficulty_box.current(2)
         self.boss_difficulty_box.grid(column=1, row=3, padx=10, pady=5)
 
+        # Buttons
+        # Clear Button
+        self.clear_btn = ttk.Button(self.frame, text="Clear", width=20)
+        self.clear_btn.grid(column=0, row=4, pady=10, ipady=5)
+
+        # Generate Button
+        self.generate_btn = ttk.Button(self.frame, text="Generate!", width=20)
+        self.generate_btn.grid(column=1, row=4, pady=10, ipady=5)
+
         self.party_avg_lv_box.configure(font=("Helvetica", 11, "bold"))
         self.party_size_box.configure(font=("Helvetica", 11, "bold"))
         self.boss_n_box.configure(font=("Helvetica", 11, "bold"))

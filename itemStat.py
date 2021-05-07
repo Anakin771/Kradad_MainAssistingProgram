@@ -10,12 +10,14 @@ generating items, including stats randomization, item crafting, etc.
 ***********************************************
 """
 
+import numpy as np
 import random
+import math
 
 QUALITY_MAPPING = {}
-QUALITY_MAPPING.update(dict.fromkeys([1, 2, 3, 18, 19, 20], -7))
-QUALITY_MAPPING.update(dict.fromkeys(range(6, 16), 0))
-QUALITY_MAPPING.update(dict.fromkeys([4, 5, 16, 17], 7))
+QUALITY_MAPPING.update(dict.fromkeys([1, 2, 3, 18, 19, 20], -7))  # Bad Quality
+QUALITY_MAPPING.update(dict.fromkeys(range(6, 16), 0))  # Normal Quality
+QUALITY_MAPPING.update(dict.fromkeys([4, 5, 16, 17], 7))  # Great Quality
 
 QUALITY_TEXT_MAPPING = {
     -7: "BAD",
@@ -41,13 +43,18 @@ ITEM_TYPE_MAPPING = {
     "acc": "Accessories"
 }
 
+WPN_WEIGHT = [12, 35, 35, 12, 12]  # Weapon Random Weight
+AMR_WEIGHT = [26, 11, 11, 26, 26]  # Armor Random Weight
 
-def random_item_stat(item_lv, item_type=None, quality_rate=None, show_stat=True):
+DEVIATION = 15
+
+
+def random_item_stat(item_lv, item_type, quality_rate=None, show_stat=True):
     """
     Random the stats for an item
     :param item_lv:
-    :param quality_rate:
     :param item_type:
+    :param quality_rate:
     :param show_stat:
     :return:
     """
@@ -68,53 +75,21 @@ def random_item_stat(item_lv, item_type=None, quality_rate=None, show_stat=True)
     # Set the number of Stat Point Multiplier: 10 for LV 1-9, and 50 for LV 10+
     item_stat_mtp = 50 if item_lv >= 10 else 10
 
-    # Stat Point Category variable category setup
-    item_hp = 0
-    item_patk = 0
-    item_matk = 0
-    item_pdef = 0
-    item_mdef = 0
+    roll_choice = ["HP", "PATK", "MATK", "PDEF", "MDEF"]
 
-    # While loop counter
-    count = 0
+    if item_type == "wpn":
+        rand_variant = np.round(np.random.normal(0, DEVIATION, size=1))
+        variant = int(min(np.abs(rand_variant[0]), 32))
+        variant = int(math.copysign(variant, rand_variant[0]))
+        roll_weight = WPN_WEIGHT
+        roll_weight[1] += variant
+        roll_weight[2] -= variant
+    elif item_type == "amr":
+        roll_weight = AMR_WEIGHT
+    else:
+        roll_weight = [20, 20, 20, 20, 20]
 
-    while count < item_stat_pt:
-        # Random the category for the current stat point
-        item_rand = random.randint(1, 5)
-
-        if item_rand == 1:
-            # Add the current pts. to PATK
-            item_patk += 1 * item_stat_mtp
-        elif item_rand == 2:
-            # Add the current pts. to MATK
-            item_matk += 1 * item_stat_mtp
-        elif item_rand == 3:
-            # Add the current pts. to PDEF
-            item_pdef += 1 * item_stat_mtp
-        elif item_rand == 4:
-            # Add the current pts. to MDEF
-            item_mdef += 1 * item_stat_mtp
-        elif item_rand == 5:
-            # Add the current pts. to HP
-            item_hp += 1 * item_stat_mtp
-
-        # Counter Up
-        count += 1
-
-    # Display the stat (if needed)
-    if show_stat:
-        item_type_text = f"{ITEM_TYPE_MAPPING.get(item_type).upper()} - " if item_type is not None else ""
-
-        print("---------------------------------")
-        print(f" ITEM STAT POINTS\n({quality_text}{item_type_text}LV. {item_lv})")
-        print(f" HP: +{item_hp} pts.")
-        print(f" P. ATK: +{item_patk} pts.")
-        print(f" M. ATK: +{item_matk} pts.")
-        print(f" P. DEF: +{int(item_pdef)} pts.")
-        print(f" M. DEF: +{int(item_mdef)} pts.")
-        print("---------------------------------")
-
-    # Return Item's Stat Points as a dictionary
+    # Build Item's Stat Points dictionary
     item = {
         "LV": item_lv,
     }
@@ -126,12 +101,30 @@ def random_item_stat(item_lv, item_type=None, quality_rate=None, show_stat=True)
         item.update({"QUALITY": quality_rate})
 
     item.update({
-        "HP": item_hp,
-        "PATK": item_patk,
-        "MATK": item_matk,
-        "PDEF": item_pdef,
-        "MDEF": item_mdef
+        "HP": 0,
+        "PATK": 0,
+        "MATK": 0,
+        "PDEF": 0,
+        "MDEF": 0
     })
+
+    # Random the category for the current stat point
+    item_rand = random.choices(roll_choice, weights=roll_weight, k=item_stat_pt)
+    for stat in item_rand:
+        item[stat] += 1 * item_stat_mtp
+
+    # Display the stat (if needed)
+    if show_stat:
+        item_type_text = f"{ITEM_TYPE_MAPPING.get(item_type).upper()} - " if item_type is not None else ""
+
+        print("---------------------------------")
+        print(f" ITEM STAT POINTS\n({quality_text}{item_type_text}LV. {item_lv})")
+        print(f" HP: +{item['HP']} pts.")
+        print(f" P. ATK: +{item['PATK']} pts.")
+        print(f" M. ATK: +{item['MATK']} pts.")
+        print(f" P. DEF: +{item['PDEF']} pts.")
+        print(f" M. DEF: +{item['MDEF']} pts.")
+        print("---------------------------------")
 
     return item
 

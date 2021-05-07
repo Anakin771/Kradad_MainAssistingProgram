@@ -11,12 +11,13 @@ and merge it into a single Desktop Application layout
 ***********************************************
 """
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 
 # External GUI file imports:
 from playerPage import PlayerPage
 from bossPage import BossPage
-from styling import *
+from itemPage import ItemPage
+from styling import Styling
 
 
 class MainUI:
@@ -40,24 +41,21 @@ class MainUI:
         self.player_page_frame = ttk.Frame(self.main_book)
         self.player_page = PlayerPage(self.root, self.main_book, self.player_page_frame)
         self.player_page_frame.pack(fill="both", expand=True)
-        # self.player_page_frame.grid()
-        # self.player_page_frame.rowconfigure('all', weight=1)
-        # self.player_page_frame.columnconfigure('all', weight=1)
 
         # Boss TODO: Build boss page with functionality similar to bossStat.py
         self.boss_page_frame = ttk.Frame(self.main_book)
         self.boss_page = BossPage(self.main_book, self.boss_page_frame)
         self.boss_page_frame.pack(fill="both", expand=True)
-        # self.boss_page_frame.grid()
-        # self.boss_page_frame.rowconfigure('all', weight=1)
-        # self.boss_page_frame.columnconfigure('all', weight=1)
 
         # Item TODO: Build item page with functionality similar to itemStat.py
+        self.item_page_frame = ttk.Frame(self.main_book)
+        self.item_page = ItemPage(self.main_book, self.item_page_frame)
+        self.item_page_frame.pack(fill="both", expand=True)
 
         # TODO: Add each frame in the Main Page Category section into the Notebook
         self.main_book.add(self.player_page_frame, text="Player")
         self.main_book.add(self.boss_page_frame, text="Boss")
-        # main_book.add(item_page, text="Item")
+        self.main_book.add(self.item_page_frame, text="Item")
 
     def run(self):
         self.root.mainloop()

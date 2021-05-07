@@ -40,8 +40,9 @@ class Styling:
         self.style.configure("lu_footnote.TLabel", font=("Helvetica", 10))
 
         # Boss Display
-        self.style.configure("single_boss_header.TLabel", font=("Helvetica", 20, "bold"))
+        self.style.configure("single_boss_header.TLabel", font=("Lucida Bright", 20, "bold"))
         self.style.configure("single_boss_subheader.TLabel", font=("Helvetica", 18, "bold"))
         self.style.configure("single_boss_stat.TLabel", font=("Helvetica", 16, "bold"))
         self.style.configure("multi_display.Treeview.Heading", font=("Lucida Bright", 14, "bold"))
-        self.style.configure("multi_display.Treeview", font=("Helvetica", 18, "bold"), rowheight=100)
+        self.style.configure("multi_display.Treeview", font=("Helvetica", 16, "bold"), rowheight=80)
+        self.style.configure("multi_header.TLabel", font=("Lucida Bright", 20, "bold"))

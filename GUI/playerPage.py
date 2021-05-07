@@ -17,7 +17,7 @@ from GUI.playerPageUIs.player_level_up import *
 
 
 class PlayerPage:
-    def __init__(self, root, parent, frame, **kwargs):
+    def __init__(self, root, parent, frame):
         self.root = root
         self.parent = parent
         self.frame = frame
@@ -40,4 +40,3 @@ class PlayerPage:
         self.level_up_frame = ttk.Frame(self.container)
         self.level_up_frame.grid(column=0, row=2)
         self.level_up = CalculateLevelUI(self.container, self.level_up_frame)
-

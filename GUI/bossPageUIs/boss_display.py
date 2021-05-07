@@ -13,6 +13,9 @@ that displays all bosses that have been generated
 import tkinter as tk
 from tkinter import ttk
 
+# Non Built-in imports:
+from Externals.multiColumn import MultiColumnListbox
+
 
 class BossDisplayUI:
     def __init__(self, root, frame):
@@ -27,9 +30,7 @@ class BossDisplayUI:
             text="Generated Boss Stats will be shown here.",
             style="placeholder.TLabel"
         )
-        self.placeholder_lbl.pack(expand=True)
-
-        # TODO: Tomorrow - Creates Single-Boss UI and Multi-Boss UI (and make sure it's proper)
+        self.placeholder_lbl.pack(ipady=140)
 
         # Single Boss Frame
         self.single_boss_frame = ttk.Frame(self.frame, relief="groove", borderwidth=3)
@@ -99,3 +100,39 @@ class BossDisplayUI:
         ).grid(column=0, row=4)
         self.single_mdef = ttk.Label(self.single_stats_frame, text="???", style="single_boss_stat.TLabel")
         self.single_mdef.grid(column=1, row=4)
+
+        # Multi-Boss Table
+        self.multi_boss_frame = ttk.Frame(self.frame)
+        self.multi_boss_frame.pack(expand=True, fill="both")
+        boss_header = ["Boss", "HP", "P. ATK", "M.ATK", "P. DEF", 'M. DEF']
+        boss_datatype = [0, 1, 1, 1, 1, 1]
+        ttk.Label(self.multi_boss_frame, text="-------- MULTI-BOSS FIGHT --------", style="multi_header.TLabel")\
+            .pack(pady=(0, 10))
+        self.multi_table_frame = ttk.Frame(self.multi_boss_frame)
+        self.multi_table_frame.pack(expand=True, fill="both")
+        self.multi_boss_table = MultiColumnListbox(
+            self.multi_table_frame,
+            self.multi_table_frame,
+            boss_header,
+            boss_datatype,
+            [],
+            heading_txt="MULTI-BOSS FIGHT",
+            table_style="multi_display"
+        )
+
+        self.show_placeholder()
+
+    def show_placeholder(self):
+        self.placeholder_lbl.pack(expand=True)
+        self.single_boss_frame.pack_forget()
+        self.multi_boss_frame.pack_forget()
+
+    def show_single_boss(self):
+        self.placeholder_lbl.pack_forget()
+        self.single_boss_frame.pack(expand=True, fill="both", padx=25, pady=25)
+        self.multi_boss_frame.pack_forget()
+
+    def show_multi_boss(self):
+        self.placeholder_lbl.pack_forget()
+        self.single_boss_frame.pack_forget()
+        self.multi_boss_frame.pack(expand=True, fill="both", pady=20)

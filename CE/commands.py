@@ -13,7 +13,7 @@ used in console edition of the app.
 import bossStat
 import itemStat
 import playerStat
-import time
+
 from os import system, name
 # import GUI.mainFrame as Gui
 

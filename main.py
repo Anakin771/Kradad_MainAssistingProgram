@@ -14,8 +14,9 @@ aside Python's built-in files and third-party open-sources)
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 from CE.commands import *
+import time
 
-VERSION = "1.4.0b"
+VERSION = "1.5.0b"
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -36,7 +37,7 @@ if __name__ == '__main__':
 
         if cmd_input.lower() in ["exit", "quit", "stop"]:
             print(" ----** See you soon! **----")
-            time.sleep(1.5)
+            time.sleep(1.0)
             break
 
         get_cmd = COMMAND_LIST.get(cmd_input.lower(), lambda: print(" There are no such commands."))

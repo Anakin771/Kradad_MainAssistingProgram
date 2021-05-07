@@ -10,11 +10,8 @@ scripts found within this project, but operates in a GUI fashion
 
 ***********************************************
 """
-import tkinter as tk
-from tkinter import ttk
 
 # Non-Builtin Imports
-from Externals.scrollableFrame import ScrollableFrame
 from GUI.bossPageUIs.boss_generate_boss import *
 from GUI.bossPageUIs.boss_display import *
 
@@ -44,7 +41,6 @@ class BossPage:
             borderwidth=4
         )
         self.boss_display = BossDisplayUI(self.container, self.boss_display_frame)
-        # self.boss_display_frame.pack()
-        self.boss_display_frame.pack(expand=True, fill="both", padx=60, pady=15)
+        self.boss_display_frame.pack(expand=True, fill="both", padx=40, pady=15)
 
         # TODO: Co-Link Boss-Input to Reward-Cal and Boss-Display

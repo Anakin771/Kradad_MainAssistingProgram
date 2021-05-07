@@ -23,7 +23,9 @@ LATE_BOSS_HP_MTP = 1000
 MULTIPLE_BOSS_MTP = 0.8
 
 # Rewards Multiplier
-XP_MULTIPLIER = 1300
+EARLY_XP_MULTIPLIER = 1300
+MID_XP_MULTIPLIER = 1400
+LATE_XP_MULTIPLIER = 1500
 MONEY_MULTIPLIER = 100
 
 # Difficulty names-to-rate tables...
@@ -104,20 +106,20 @@ def random_boss_stat(party_avg_lv, player_num, diff=None, show_stat=True):
               f"Boss Difficulty must be at least on {least_diff.capitalize()}.")
         return None
 
-    # Determine Boss' HP
+    # Determine Boss' HP & Calculate XP Reward
     if boss_lv <= 30:
         boss_hp = (party_avg_lv + hp_diff_rate) * player_num * EARLY_BOSS_HP_MTP
+        xp_reward = boss_lv * EARLY_XP_MULTIPLIER
     elif boss_lv <= 60:
         boss_hp = (party_avg_lv + hp_diff_rate) * player_num * MID_BOSS_HP_MTP
+        xp_reward = boss_lv * MID_XP_MULTIPLIER
     else:
         boss_hp = (party_avg_lv + hp_diff_rate) * player_num * LATE_BOSS_HP_MTP
+        xp_reward = boss_lv * LATE_XP_MULTIPLIER
 
     # Determine Boss Stats' Roll Point
     boss_stat_pt = boss_lv if boss_lv >= 10 else boss_lv * 5
     boss_stat_mtp = 100 if boss_lv >= 10 else 20
-
-    # Calculate XP Reward
-    xp_reward = boss_lv * XP_MULTIPLIER
 
     # Calculate Money Reward
     money_reward = (party_avg_lv + money_diff_rate) * MONEY_MULTIPLIER
@@ -211,7 +213,12 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
         return None
 
     # Calculate XP Reward
-    xp_reward = boss_lv * XP_MULTIPLIER
+    if boss_lv <= 30:
+        xp_reward = boss_lv * EARLY_XP_MULTIPLIER
+    elif boss_lv <= 60:
+        xp_reward = boss_lv * MID_XP_MULTIPLIER
+    else:
+        xp_reward = boss_lv * LATE_XP_MULTIPLIER
 
     # Get Boss Coin Reward Difficulty Rate
     money_diff_rate = DIFF_TO_COIN_MAPPING.get(diff, 0)

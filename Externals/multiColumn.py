@@ -15,12 +15,22 @@ except ImportError:  # Python 3
 class MultiColumnListbox(object):
     """use a ttk.TreeView as a multicolumn ListBox"""
 
-    def __init__(self, parent, frame, header, data_types, content, heading_txt=None):
+    def __init__(
+            self,
+            parent,
+            frame,
+            header,
+            data_types,
+            content,
+            heading_txt=None,
+            table_style="testStyle"
+    ):
         self.parent = parent
         self.frame = frame
         self.header = header
         self.data_types = data_types
         self.content = content
+        self.table_style = f"{table_style}.Treeview"
         if heading_txt is None:
             self.heading_txt = """Click on header to sort by that column
 to change width of column drag boundary
@@ -33,11 +43,13 @@ to change width of column drag boundary
         self._build_tree()
 
     def _setup_widgets(self):
-        msg = ttk.Label(self.parent, wraplength="4i", justify="left", anchor="n",
-                        padding=(10, 2, 10, 6), text=self.heading_txt)
-        msg.pack(fill='x')
         # create a treeview with dual scrollbars
-        self.tree = ttk.Treeview(self.frame, columns=self.header, show="headings", style="testStyle.Treeview")
+        self.tree = ttk.Treeview(
+            self.frame,
+            columns=self.header,
+            show="headings",
+            style=self.table_style
+        )
         vsb = ttk.Scrollbar(self.frame, orient="vertical",
                             command=self.tree.yview)
         hsb = ttk.Scrollbar(self.frame, orient="horizontal",
