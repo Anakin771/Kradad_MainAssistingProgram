@@ -6,11 +6,11 @@ Author: MontyGUI
 Description
 This script includes the styling of the GUI of ALL Pages.
 This file is included into the master page (mainFrame.py).
+
 ***********************************************
 """
 
-import tkinter as tk
-from tkinter import ttk, messagebox, font
+from tkinter import ttk
 
 
 class Styling:
@@ -44,5 +44,5 @@ class Styling:
         self.style.configure("single_boss_subheader.TLabel", font=("Helvetica", 18, "bold"))
         self.style.configure("single_boss_stat.TLabel", font=("Helvetica", 16, "bold"))
         self.style.configure("multi_display.Treeview.Heading", font=("Lucida Bright", 14, "bold"))
-        self.style.configure("multi_display.Treeview", font=("Helvetica", 16, "bold"), rowheight=80)
+        self.style.configure("multi_display.Treeview", font=("Helvetica", 16, "bold"), rowheight=50)
         self.style.configure("multi_header.TLabel", font=("Lucida Bright", 20, "bold"))

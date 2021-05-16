@@ -78,74 +78,39 @@ def random_boss_stat(party_avg_lv, player_num, diff=None, show_stat=True):
         input_diff = False
         diff = "normal"
 
-    # Get Boss LV Difficulty Rate
-    lv_diff_rate = DIFF_TO_LV_MAPPING.get(diff, 0)
+    # Adjust Difficulty
+    hp_diff_rate, boss_lv = adjust_difficulty(party_avg_lv, diff)
+    if hp_diff_rate is None or boss_lv is None:
+        return
 
-    # Get Boss HP Difficulty Rate
-    hp_diff_rate = DIFF_TO_HP_MAPPING.get(diff, 0)
+    # Determine Boss' HP
+    boss_hp = calculate_boss_hp(boss_lv, party_avg_lv, hp_diff_rate, player_num)
 
-    # Get Boss Coin Reward Difficulty Rate
-    money_diff_rate = DIFF_TO_COIN_MAPPING.get(diff, 0)
-
-    # Get Boss Item Reward Difficulty Rate
-    item_reward = DIFF_TO_ITEM_MAPPING.get(diff, 0)
-
-    # Calculate Real Boss LV
-    boss_lv = party_avg_lv + lv_diff_rate
-
-    # If calculated LV is 0 or less, flag an error an find the floor difficulty for that party.
-    if boss_lv <= 0:
-        least_diff = ""
-        for diff_name, lv in DIFF_TO_LV_MAPPING.items():
-            if party_avg_lv + lv > 0:
-                least_diff = diff_name
-                break
-
-        print("Error: Too low difficulty!")
-        print(f"For LV {party_avg_lv} party, "
-              f"Boss Difficulty must be at least on {least_diff.capitalize()}.")
-        return None
-
-    # Determine Boss' HP & Calculate XP Reward
-    if boss_lv <= 30:
-        boss_hp = (party_avg_lv + hp_diff_rate) * player_num * EARLY_BOSS_HP_MTP
-        xp_reward = boss_lv * EARLY_XP_MULTIPLIER
-    elif boss_lv <= 60:
-        boss_hp = (party_avg_lv + hp_diff_rate) * player_num * MID_BOSS_HP_MTP
-        xp_reward = boss_lv * MID_XP_MULTIPLIER
-    else:
-        boss_hp = (party_avg_lv + hp_diff_rate) * player_num * LATE_BOSS_HP_MTP
-        xp_reward = boss_lv * LATE_XP_MULTIPLIER
+    # Calculate Reward
+    xp_reward, money_reward, item_reward = calculate_reward(boss_lv, party_avg_lv, diff)
 
     # Determine Boss Stats' Roll Point
-    boss_stat_pt = boss_lv if boss_lv >= 10 else boss_lv * 5
+    boss_roll_pt = boss_lv if boss_lv >= 10 else boss_lv * 5
     boss_stat_mtp = 100 if boss_lv >= 10 else 20
 
-    # Calculate Money Reward
-    money_reward = (party_avg_lv + money_diff_rate) * MONEY_MULTIPLIER
+    # Create Boss Dictionary for returning
+    boss = {
+        "DIFFICULTY": diff,
+        "LV": boss_lv,
+        "HP": boss_hp,
+        "PATK": 0,
+        "MATK": 0,
+        "PDEF": 0,
+        "MDEF": 0
+    }
 
-    # Initial Variable Setup
-    boss_patk = 0
-    boss_matk = 0
-    boss_pdef = 0
-    boss_mdef = 0
-
-    count = 0
+    # Roll Choices
+    roll_choices = ["PATK", "MATK", "PDEF", "MDEF"]
 
     # Randomize Stat Points
-    while count < boss_stat_pt:
-        boss_rand = random.randint(1, 4)
-
-        if boss_rand == 1:
-            boss_patk += 1 * boss_stat_mtp
-        elif boss_rand == 2:
-            boss_matk += 1 * boss_stat_mtp
-        elif boss_rand == 3:
-            boss_pdef += 1 * boss_stat_mtp
-        elif boss_rand == 4:
-            boss_mdef += 1 * boss_stat_mtp
-
-        count += 1
+    stats_rand = random.choices(roll_choices, k=boss_roll_pt)
+    for stat in stats_rand:
+        boss[stat] += boss_stat_mtp
 
     # Show stats if set enabled
     if show_stat:
@@ -156,10 +121,10 @@ def random_boss_stat(party_avg_lv, player_num, diff=None, show_stat=True):
         print()
         print(" STATS:")
         print(f" HP: {boss_hp}")
-        print(f" P. ATK: {boss_patk}")
-        print(f" M. ATK: {boss_matk}")
-        print(f" P. DEF: {int(boss_pdef / 2)}")
-        print(f" M. DEF: {int(boss_mdef / 2)}")
+        print(f" P. ATK: {boss['PATK']}")
+        print(f" M. ATK: {boss['MATK']}")
+        print(f" P. DEF: {int(boss['PDEF'] / 2)}")
+        print(f" M. DEF: {int(boss['MDEF'] / 2)}")
         print("-------------------------------------------------")
         print(" Rewards* :")
         print(
@@ -171,14 +136,7 @@ def random_boss_stat(party_avg_lv, player_num, diff=None, show_stat=True):
               "and no +20% Bonus from declining dropped item.")
         print("-------------------------------------------------")
 
-    return {
-        "LV": boss_lv,
-        "HP": boss_hp,
-        "PATK": boss_patk,
-        "MATK": boss_matk,
-        "PDEF": boss_pdef,
-        "MDEF": boss_mdef
-    }
+    return boss
 
 
 def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=True):
@@ -190,52 +148,13 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
         input_diff = False
         diff = "normal"
 
-    # Get Boss LV Difficulty Rate
-    lv_diff_rate = DIFF_TO_LV_MAPPING.get(diff, 0)
+    hp_diff_rate, boss_lv = adjust_difficulty(party_avg_lv, diff)
 
-    # Get Boss HP Difficulty Rate
-    hp_diff_rate = DIFF_TO_HP_MAPPING.get(diff, 0)
-
-    # Find Bosses' Real LV
-    boss_lv = party_avg_lv + lv_diff_rate
-
-    # If calculated LV is 0 or less, flag an error an find the floor difficulty for that party.
-    if boss_lv <= 0:
-        least_diff = ""
-        for diff_name, lv in DIFF_TO_LV_MAPPING.items():
-            if party_avg_lv + lv > 0:
-                least_diff = diff_name
-                break
-
-        print(" Error: Too low difficulty!")
-        print(f" For LV {party_avg_lv} party,"
-              f" Boss Difficulty must be at least on {least_diff.capitalize()}.")
-        return None
-
-    # Calculate XP Reward
-    if boss_lv <= 30:
-        xp_reward = boss_lv * EARLY_XP_MULTIPLIER
-    elif boss_lv <= 60:
-        xp_reward = boss_lv * MID_XP_MULTIPLIER
-    else:
-        xp_reward = boss_lv * LATE_XP_MULTIPLIER
-
-    # Get Boss Coin Reward Difficulty Rate
-    money_diff_rate = DIFF_TO_COIN_MAPPING.get(diff, 0)
-
-    # Get Boss Item Reward Difficulty Rate
-    item_reward = DIFF_TO_ITEM_MAPPING.get(diff, 0)
-
-    # Calculate Money Reward
-    money_reward = (party_avg_lv + money_diff_rate) * MONEY_MULTIPLIER
+    # Calculate Reward
+    xp_reward, money_reward, item_reward = calculate_reward(boss_lv, party_avg_lv, diff)
 
     # Determine Bosses' HP
-    if boss_lv <= 30:
-        boss_hp = int(((party_avg_lv + hp_diff_rate) * player_num * EARLY_BOSS_HP_MTP) / 3)
-    elif boss_lv <= 60:
-        boss_hp = int(((party_avg_lv + hp_diff_rate) * player_num * MID_BOSS_HP_MTP) / 3)
-    else:
-        boss_hp = int(((party_avg_lv + hp_diff_rate) * player_num * LATE_BOSS_HP_MTP) / 3)
+    boss_hp = int(calculate_boss_hp(boss_lv, party_avg_lv, hp_diff_rate, player_num) / 3)
 
     # Initial Variable Setup
     boss_list = []
@@ -246,6 +165,7 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
         single_boss_stat = random_boss_stat(party_avg_lv, player_num, diff=diff, show_stat=False)
         current_boss = {
             "LV": single_boss_stat["LV"],
+            "DIFFICULTY": diff,
             "HP": boss_hp,
             "PATK": int(round_basic(single_boss_stat["PATK"] * reduce_mtp, -1)),
             "MATK": int(round_basic(single_boss_stat["MATK"] * reduce_mtp, -1)),
@@ -267,6 +187,10 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
         for boss in boss_list:
             print(f" Boss #{boss_count} Stats:")
             for stat, value in boss.items():
+                # Skip Difficulty (This is added for compatibility with Graphical Edition)
+                if stat == "DIFFICULTY":
+                    continue
+
                 if stat == "LV":
                     print(f" LV. {value}")
                 elif stat == "PDEF" or stat == "MDEF":
@@ -288,3 +212,68 @@ def random_boss_stat_multi(party_avg_lv, player_num, qty, diff=None, show_stat=T
         print("**********************************************")
 
     return boss_list
+
+
+def calculate_boss_hp(boss_lv, pty_avg, hp_diff_rate, player_num):
+    if boss_lv <= 30:
+        boss_hp = (pty_avg + hp_diff_rate) * player_num * EARLY_BOSS_HP_MTP
+    elif boss_lv <= 60:
+        boss_hp = (pty_avg + hp_diff_rate) * player_num * MID_BOSS_HP_MTP
+    else:
+        boss_hp = (pty_avg + hp_diff_rate) * player_num * LATE_BOSS_HP_MTP
+
+    return int(boss_hp)
+
+
+def calculate_xp(boss_lv):
+    if boss_lv <= 30:
+        xp_reward = boss_lv * EARLY_XP_MULTIPLIER
+    elif boss_lv <= 60:
+        xp_reward = boss_lv * MID_XP_MULTIPLIER
+    else:
+        xp_reward = boss_lv * LATE_XP_MULTIPLIER
+
+    return int(xp_reward)
+
+
+def adjust_difficulty(prty_avg, diff, show_text="True"):
+    # Get Boss LV Difficulty Rate
+    lv_diff_rate = DIFF_TO_LV_MAPPING.get(diff, 0)
+
+    # Get Boss HP Difficulty Rate
+    hp_diff_rate = DIFF_TO_HP_MAPPING.get(diff, 0)
+
+    # Find Bosses' Real LV
+    boss_lv = prty_avg + lv_diff_rate
+
+    # If calculated LV is 0 or less, flag an error an find the floor difficulty for that party.
+    if boss_lv <= 0:
+        least_diff = ""
+        for diff_name, lv in DIFF_TO_LV_MAPPING.items():
+            if prty_avg + lv > 0:
+                least_diff = diff_name
+                break
+
+        if show_text:
+            print(" Error: Too low difficulty!")
+            print(f" For LV {prty_avg} party,"
+                  f" Boss Difficulty must be at least on {least_diff.capitalize()}.")
+        return None, None
+
+    return hp_diff_rate, boss_lv
+
+
+def calculate_reward(boss_lv, prty_avg, diff):
+    # Calculate XP Reward
+    xp_reward = calculate_xp(boss_lv)
+
+    # Get Boss Coin Reward Difficulty Rate
+    money_diff_rate = DIFF_TO_COIN_MAPPING.get(diff, 0)
+
+    # Calculate Money Reward
+    money_reward = (prty_avg + money_diff_rate) * MONEY_MULTIPLIER
+
+    # Get Boss Item Reward Difficulty Rate
+    item_reward = DIFF_TO_ITEM_MAPPING.get(diff, 0)
+
+    return xp_reward, money_reward, item_reward

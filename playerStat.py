@@ -23,11 +23,11 @@ def clear():
         _ = system('clear')
 
 
-DEFAULT_STARTING_BASE_ROLL = 40
-DEFAULT_STARTING_MTP = 5
+STARTING_BASE_ROLL = 40
+STARTING_MTP = 5
 
-DEFAULT_BONUS_BASE_ROLL = 20
-DEFAULT_BONUS_MTP = 5
+BONUS_BASE_ROLL = 20
+BONUS_MTP = 5
 
 EARLY_REQ_XP_RATE = 1.5
 MID_REQ_XP_RATE = 1.65
@@ -38,7 +38,7 @@ ITEM_DECLINED_BONUS_MTP = 1.2
 FALLEN_ALLY_PENALTY = 0.1
 
 
-def random_char_stat_single(base_roll_point, multiplier, header_text="", show_stat=True):
+def random_char_stat_single(base_roll_point, multiplier, header_text=None, show_stat=True):
     """
     Randomize a character stat points only once upon given factors.
     :param base_roll_point: The number of times to random a category of stats
@@ -136,16 +136,16 @@ def random_starting_char():
     None if the action is canceled.
     """
     starting = random_char_stat_full(
-        DEFAULT_STARTING_BASE_ROLL,
-        DEFAULT_STARTING_MTP,
+        STARTING_BASE_ROLL,
+        STARTING_MTP,
         header_text="------------ Step 1: Randomizing Starting Stats ------------"
     )
     if starting is None:
         return None
 
     bonus = random_char_stat_full(
-        DEFAULT_BONUS_BASE_ROLL,
-        DEFAULT_BONUS_MTP,
+        BONUS_BASE_ROLL,
+        BONUS_MTP,
         header_text="------------ Step 2: Randomizing Bonus Rate ------------"
     )
     if bonus is None:
@@ -184,6 +184,7 @@ def calculate_level_up(char_lv, current_xp, gained_xp, fallen=0, item_accepted=T
     # For LV 10 and lower, XP Gained is x2
     gained_xp *= 2 if char_lv <= 10 else 1
 
+    # Calculate Level Up
     total_xp = current_xp + int(rounder.round_basic(gained_xp))
     gained_sp = 0
     while total_xp >= req_xp:
@@ -195,6 +196,13 @@ def calculate_level_up(char_lv, current_xp, gained_xp, fallen=0, item_accepted=T
             gained_sp += 2
         elif new_char_lv % 5 == 0:
             gained_sp += 1
+
+    notice = ""
+    if new_char_lv <= char_lv:
+        if gained_xp <= 0 < fallen:
+            notice = "Too many players have fallen."
+        else:
+            notice = "Your total XP does not reach target XP."
 
     if show_stat:
         extra_cal = False
@@ -239,15 +247,19 @@ def calculate_level_up(char_lv, current_xp, gained_xp, fallen=0, item_accepted=T
     return {
         "lv_up": bool(new_char_lv > char_lv),
         "item_decl": bool(not item_accepted),
+        "fallen": fallen,
         "fallen_penalty": min(int(fallen * 10), 100),
         "old": {
             "lv": char_lv,
-            "rex_xp": current_xp
+            "rem_xp": current_xp
         },
         "new": {
             "lv": new_char_lv,
             "rem_xp": total_xp
-        }
+        },
+        "gained_xp": gained_xp,
+        "gained_sp": gained_sp,
+        "note": notice
     }
 
 

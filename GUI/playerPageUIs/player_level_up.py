@@ -9,12 +9,12 @@ it includes the layout and functions of the interface
 that calculating user's Character LV
 ***********************************************
 """
-import tkinter as tk
+
 from tkinter import ttk
 
 # Non-builtin Imports:
-from GUI.playerPageUIs.player_lu_input import *
-from GUI.playerPageUIs.player_lu_display import *
+from GUI.playerPageUIs.player_lu_input import LevelUpInputUI
+from GUI.playerPageUIs.player_lu_display import LevelUpDisplayUI
 
 
 class CalculateLevelUI:
@@ -36,13 +36,12 @@ class CalculateLevelUI:
         # Input Section
         self.lvl_input_frame = ttk.Frame(self.frame)
         self.lvl_input_frame.grid(column=0, row=1, pady=10)
-        self.lvl_input = LevelUpInputUI(self.frame, self.lvl_input_frame)
+        self.lvl_input = LevelUpInputUI(self.root, self.lvl_input_frame)
 
         # Display Section
         self.lvl_display_frame = ttk.Frame(self.frame)
         self.lvl_display_frame.grid(column=1, row=1, pady=10)
-        self.lvl_display = LevelUpDisplayUI(self.frame, self.lvl_display_frame)
+        self.lvl_display = LevelUpDisplayUI(self.root, self.lvl_display_frame)
 
-        # Input Section & Display Section Co-Linking
-        # TODO: Co-Link Input Section and Display Section
-        # self.lvl_input.lvl_display_ui = ???
+        # Input Section & Display Section Linking
+        self.lvl_input.lvl_display_ui = self.lvl_display

@@ -10,7 +10,7 @@ that displays all bosses that have been generated
 
 ***********************************************
 """
-import tkinter as tk
+
 from tkinter import ttk
 
 # Non Built-in imports:
@@ -104,12 +104,16 @@ class BossDisplayUI:
         # Multi-Boss Table
         self.multi_boss_frame = ttk.Frame(self.frame)
         self.multi_boss_frame.pack(expand=True, fill="both")
-        boss_header = ["Boss", "HP", "P. ATK", "M.ATK", "P. DEF", 'M. DEF']
-        boss_datatype = [0, 1, 1, 1, 1, 1]
+
+        boss_header = ["Boss", "LV", "HP", "P. ATK", "M.ATK", "P. DEF", 'M. DEF']
+        boss_datatype = [0, 1, 1, 1, 1, 1, 1]
+
         ttk.Label(self.multi_boss_frame, text="-------- MULTI-BOSS FIGHT --------", style="multi_header.TLabel")\
             .pack(pady=(0, 10))
+
         self.multi_table_frame = ttk.Frame(self.multi_boss_frame)
         self.multi_table_frame.pack(expand=True, fill="both")
+
         self.multi_boss_table = MultiColumnListbox(
             self.multi_table_frame,
             self.multi_table_frame,
@@ -136,3 +140,31 @@ class BossDisplayUI:
         self.placeholder_lbl.pack_forget()
         self.single_boss_frame.pack_forget()
         self.multi_boss_frame.pack(expand=True, fill="both", pady=20)
+
+    def display(self, boss):
+        # Check for Single Boss, which is in dictionary type
+        if type(boss) is dict:
+            self.show_single_boss()
+            self.diff_lv_box['text'] = f"{boss['DIFFICULTY'].upper()} DIFFICULTY - LV. {boss['LV']}"
+            self.single_hp['text'] = str(boss['HP'])
+            self.single_patk['text'] = str(boss['PATK'])
+            self.single_matk['text'] = str(boss['MATK'])
+            self.single_pdef['text'] = str(int(boss['PDEF'] / 2))
+            self.single_mdef['text'] = str(int(boss['MDEF'] / 2))
+        elif type(boss) is list:
+            self.show_multi_boss()
+            boss_info_table = []
+            count = 0
+            for boss_row in boss:
+                current_row = [
+                    f"Boss #{count + 1}",
+                    boss_row['LV'],
+                    boss_row['HP'],
+                    boss_row['PATK'],
+                    boss_row['MATK'],
+                    int(boss_row['PDEF'] / 2),
+                    int(boss_row['MDEF'] / 2)
+                ]
+                boss_info_table.append(current_row)
+                count += 1
+            self.multi_boss_table.update_list(boss_info_table)

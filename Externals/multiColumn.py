@@ -84,7 +84,13 @@ to change width of column drag boundary
     def update_list(self, new_list):
         self.content = new_list
         self.tree.delete(*self.tree.get_children())  # Clear all entries
-        self._build_tree()
+        for item in self.content:
+            self.tree.insert('', 'end', values=item)
+            # adjust column's width if necessary to fit each value
+            for ix, val in enumerate(item):
+                col_w = tkfont.Font().measure(val)
+                if self.tree.column(self.header[ix], width=None) < col_w:
+                    self.tree.column(self.header[ix], width=col_w)
 
 
 def sortby_str(tree, column, descending):

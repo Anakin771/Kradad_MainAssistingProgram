@@ -10,8 +10,10 @@ that calculate Rewards from the generated boss fight.
 
 ***********************************************
 """
-import tkinter as tk
-from tkinter import ttk
+
+from tkinter import ttk, messagebox
+
+from bossStat import *
 
 
 class RewardCalculationUI:
@@ -30,38 +32,42 @@ class RewardCalculationUI:
         # Money Line
         # Frame
         self.money_frame = ttk.Frame(self.container)
-        self.money_frame.grid(column=0, row=1)
+        self.money_frame.grid(column=0, row=1, padx=30)
         # Category Text
-        ttk.Label(self.money_frame, text="Money: ").grid(column=0, row=0)
+        ttk.Label(self.money_frame, text="Money: ", style="category_txt.TLabel")\
+            .grid(column=0, row=0, padx=(60, 0), pady=5)
         # Money Text
-        self.money_box = ttk.Label(self.money_frame, text="???")
-        self.money_box.grid(column=1, row=0)
+        self.money_box = ttk.Label(self.money_frame, text="???", style="category_txt.TLabel")
+        self.money_box.grid(column=1, row=0, padx=10, pady=5)
         # Coin Unit
-        ttk.Label(self.money_frame, text="(C)").grid(column=2, row=0)
+        ttk.Label(self.money_frame, text="(C)", style="category_txt.TLabel").grid(column=2, row=0, padx=(0, 60), pady=5)
 
         # XP Line
         # Frame
         self.xp_frame = ttk.Frame(self.container)
-        self.xp_frame.grid(column=0, row=2)
+        self.xp_frame.grid(column=0, row=2, padx=30)
         # Category Text
-        ttk.Label(self.xp_frame, text="EXP: ").grid(column=0, row=0)
+        ttk.Label(self.xp_frame, text="EXP: ", style="category_txt.TLabel")\
+            .grid(column=0, row=0, padx=(60, 0), pady=5)
         # XP Text
-        self.xp_box = ttk.Label(self.xp_frame, text="???")
-        self.xp_box.grid(column=1, row=0)
+        self.xp_box = ttk.Label(self.xp_frame, text="???", style="category_txt.TLabel")
+        self.xp_box.grid(column=1, row=0, padx=10, pady=5)
         # XP Unit
-        ttk.Label(self.xp_frame, text="XP").grid(column=2, row=0)
+        ttk.Label(self.xp_frame, text="XP", style="category_txt.TLabel").grid(column=2, row=0, padx=(0, 60), pady=5)
 
         # Drop Line
         # Frame
         self.drop_frame = ttk.Frame(self.container)
-        self.drop_frame.grid(column=0, row=3)
+        self.drop_frame.grid(column=0, row=3, padx=30)
         # Category Text
-        ttk.Label(self.drop_frame, text="Drop: ").grid(column=0, row=0)
+        ttk.Label(self.drop_frame, text="Drop: ", style="category_txt.TLabel")\
+            .grid(column=0, row=0, padx=(60, 0), pady=5)
         # Drop Amount Tet
-        self.drop_amount_box = ttk.Label(self.drop_frame, text="???")
-        self.drop_amount_box.grid(column=1, row=0)
+        self.drop_amount_box = ttk.Label(self.drop_frame, text="???", style="category_txt.TLabel")
+        self.drop_amount_box.grid(column=1, row=0, padx=10, pady=5)
         # Item Unit
-        ttk.Label(self.drop_frame, text="Item(s)").grid(column=2, row=0)
+        ttk.Label(self.drop_frame, text="Item(s)", style="category_txt.TLabel")\
+            .grid(column=2, row=0, padx=(0, 60), pady=5)
 
         # Hide reward categories upon initialize
         self.hide_reward()
@@ -79,5 +85,26 @@ class RewardCalculationUI:
         self.money_frame.grid(column=0, row=1)
         self.xp_frame.grid(column=0, row=2)
         self.drop_frame.grid(column=0, row=3)
+
+    def display(self, xp, money, item):
+        self.show_reward()
+        self.xp_box['text'] = str(xp)
+        self.money_box['text'] = str(money)
+        self.drop_amount_box['text'] = str(item)
+
+    def calculate(self, boss, pal):
+        if type(boss) is dict:
+            boss_lv = boss["LV"]
+            diff = boss["DIFFICULTY"]
+        elif type(boss) is list:
+            sample_boss = boss[0]
+            boss_lv = sample_boss["LV"]
+            diff = sample_boss["DIFFICULTY"]
+        else:
+            messagebox.showerror(title="Error", message="An error has occurred due to faulty coding in bossStat.py\n"
+                                                        " Please contact the Developer to report this error.")
+            return False
+        xp_r, money_r, item_r = calculate_reward(boss_lv, pal, diff)
+        self.display(xp_r, money_r, item_r)
 
     # TODO: Create Method(s) that receives and display calculated reward

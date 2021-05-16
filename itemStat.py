@@ -43,10 +43,10 @@ ITEM_TYPE_MAPPING = {
     "acc": "Accessories"
 }
 
-WPN_WEIGHT = [12, 35, 35, 12, 12]  # Weapon Random Weight
+WPN_WEIGHT = [12, 32, 32, 12, 12]  # Weapon Random Weight
 AMR_WEIGHT = [26, 11, 11, 26, 26]  # Armor Random Weight
 
-DEVIATION = 15
+DEVIATION = 12
 
 
 def random_item_stat(item_lv, item_type, quality_rate=None, show_stat=True):
@@ -78,9 +78,9 @@ def random_item_stat(item_lv, item_type, quality_rate=None, show_stat=True):
     roll_choice = ["HP", "PATK", "MATK", "PDEF", "MDEF"]
 
     if item_type == "wpn":
-        rand_variant = np.round(np.random.normal(0, DEVIATION, size=1))
-        variant = int(min(np.abs(rand_variant[0]), 32))
-        variant = int(math.copysign(variant, rand_variant[0]))
+        rand_variant = np.round(np.random.normal(0, DEVIATION, size=1))[0]
+        variant = int(min(np.abs(rand_variant), 32))
+        variant = int(math.copysign(variant, rand_variant))
         roll_weight = WPN_WEIGHT
         roll_weight[1] += variant
         roll_weight[2] -= variant

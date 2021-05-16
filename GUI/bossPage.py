@@ -4,7 +4,7 @@
 Author: MontyGUI
 
 Description:
-This script includes the GUI of the Player Page,
+This script includes the GUI of the Boss Page,
 which includes the functionality like the bossStat.py
 scripts found within this project, but operates in a GUI fashion
 
@@ -27,13 +27,6 @@ class BossPage:
         self.container = ttk.Frame(self.frame, relief="groove", borderwidth=3)
         self.container.pack(padx=10, pady=10, ipadx=10, ipady=10)
 
-        # Generate Boss Fight Section
-        self.generate_boss_frame = ttk.Frame(self.container)
-        self.generate_boss_frame.pack()
-        self.generate_boss = GenerateBossUI(self.container, self.generate_boss_frame)
-
-        ttk.Separator(self.container).pack(padx=25, pady=10, expand=True, fill="both")
-
         # Boss Display Section
         self.boss_display_frame = ttk.Frame(
             self.container,
@@ -41,6 +34,12 @@ class BossPage:
             borderwidth=4
         )
         self.boss_display = BossDisplayUI(self.container, self.boss_display_frame)
-        self.boss_display_frame.pack(expand=True, fill="both", padx=40, pady=15)
 
-        # TODO: Co-Link Boss-Input to Reward-Cal and Boss-Display
+        # Generate Boss Fight Section
+        self.generate_boss_frame = ttk.Frame(self.container)
+        self.generate_boss = GenerateBossUI(self.container, self.generate_boss_frame, boss_display_ui=self.boss_display)
+
+        # Positioning
+        self.generate_boss_frame.pack()
+        ttk.Separator(self.container).pack(padx=25, pady=10, expand=True, fill="both")
+        self.boss_display_frame.pack(expand=True, fill="both", padx=40, pady=15)

@@ -19,12 +19,14 @@ from bossPage import BossPage
 from itemPage import ItemPage
 from styling import Styling
 
+VERSION = "1.0.0"
+
 
 class MainUI:
     def __init__(self):
         # Main GUI Frame
         self.root = tk.Tk()
-        self.root.title("Game Kradad - Gameplay Assisting Program")
+        self.root.title(f"Game Kradad - Main Assisting Program (v{VERSION})")
         self.root.iconbitmap("../ico/gkne-mainap-ce-icon.ico")
         self.root.geometry("+200+30")
 
@@ -37,22 +39,22 @@ class MainUI:
 
         # Main Page Category
 
-        # Player TODO: Build player page with functionality similar to playerStat.py
+        # Player
         self.player_page_frame = ttk.Frame(self.main_book)
         self.player_page = PlayerPage(self.root, self.main_book, self.player_page_frame)
         self.player_page_frame.pack(fill="both", expand=True)
 
-        # Boss TODO: Build boss page with functionality similar to bossStat.py
+        # Boss
         self.boss_page_frame = ttk.Frame(self.main_book)
-        self.boss_page = BossPage(self.main_book, self.boss_page_frame)
+        self.boss_page = BossPage(self.root, self.boss_page_frame)
         self.boss_page_frame.pack(fill="both", expand=True)
 
         # Item TODO: Build item page with functionality similar to itemStat.py
         self.item_page_frame = ttk.Frame(self.main_book)
-        self.item_page = ItemPage(self.main_book, self.item_page_frame)
+        self.item_page = ItemPage(self.root, self.item_page_frame)
         self.item_page_frame.pack(fill="both", expand=True)
 
-        # TODO: Add each frame in the Main Page Category section into the Notebook
+        # Add each Frame into the Notebook Widget
         self.main_book.add(self.player_page_frame, text="Player")
         self.main_book.add(self.boss_page_frame, text="Boss")
         self.main_book.add(self.item_page_frame, text="Item")

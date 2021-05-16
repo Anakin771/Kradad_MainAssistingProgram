@@ -31,7 +31,7 @@ class PlayerPage:
         # New Character Section
         self.new_char_frame = ttk.Frame(self.container)
         self.new_char_frame.grid(column=0, row=0)
-        self.new_char = NewCharUI(self.container, self.new_char_frame)
+        self.new_char = NewCharUI(self.root, self.new_char_frame)
 
         # Actions Separator
         ttk.Separator(self.container).grid(column=0, row=1, padx=5, pady=25, sticky="we")
@@ -39,4 +39,4 @@ class PlayerPage:
         # Level Calculation Section
         self.level_up_frame = ttk.Frame(self.container)
         self.level_up_frame.grid(column=0, row=2)
-        self.level_up = CalculateLevelUI(self.container, self.level_up_frame)
+        self.level_up = CalculateLevelUI(self.root, self.level_up_frame)

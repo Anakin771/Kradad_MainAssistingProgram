@@ -53,4 +53,6 @@ class GenerateBossUI:
         self.boss_reward_frame.grid(column=2, row=0)
         self.boss_reward = RewardCalculationUI(self.upper_content_frame, self.boss_reward_frame)
 
-        # TODO: Co-Link Boss-Input to Reward-Cal and Boss-Display
+        # Linking
+        self.boss_input.reward_cal_ui = self.boss_reward
+        self.boss_input.boss_display_ui = self.boss_display_ui
