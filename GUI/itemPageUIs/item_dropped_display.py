@@ -11,8 +11,13 @@ that displays the generated dropped item
 ***********************************************
 """
 
-import tkinter as tk
 from tkinter import ttk
+
+ITEM_TYPE_MAPPING = {
+    "wpn": "Weapon",
+    "amr": "Armor",
+    "acc": "Accessories"
+}
 
 
 class DroppedDisplayUI:
@@ -32,11 +37,11 @@ class DroppedDisplayUI:
 
         # Content Frame
         self.content_frame = ttk.Frame(self.lbf)
-        self.content_frame.pack(expand=True, fill="both", padx=60)
+        self.content_frame.pack(expand=True, fill="both", padx=100, ipadx=100)
 
-        # Type & Label Row
-        ttk.Label(self.content_frame, text="[TYPE] - LV [LV]", style="category_txt.TLabel")\
-            .grid(column=0, row=0, columnspan=3)
+        # Type & Level Row
+        self.type_lv_box = ttk.Label(self.content_frame, text="[TYPE] - LV [LV]", style="category_txt.TLabel")
+        self.type_lv_box.grid(column=0, row=0, columnspan=3)
 
         # HP Row
         ttk.Label(self.content_frame, text="HP: ", style="category_txt.TLabel")\
@@ -80,5 +85,15 @@ class DroppedDisplayUI:
         self.placeholder_frame.pack(expand=True, fill="both")
 
     def show_content(self):
-        self.content_frame.pack(expand=True, fill="both")
+        self.content_frame.pack(expand=True, fill="both", padx=50)
         self.placeholder_frame.pack_forget()
+
+    def display(self, item):
+        type_text = ITEM_TYPE_MAPPING.get(item['TYPE'], "????")
+        self.type_lv_box['text'] = f"{type_text} - LV {item['LV']}"
+        self.hp_box['text'] = f"{item['HP']}"
+        self.patk_box['text'] = f"{item['PATK']}"
+        self.matk_box['text'] = f"{item['MATK']}"
+        self.pdef_box['text'] = f"{item['PDEF']}"
+        self.mdef_box['text'] = f"{item['MDEF']}"
+        self.show_content()

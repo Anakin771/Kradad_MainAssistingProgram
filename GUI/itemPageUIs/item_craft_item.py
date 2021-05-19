@@ -44,7 +44,7 @@ class CraftItemUI:
         # Input Section
         self.craft_input_frame = ttk.Frame(self.content_frame)
         self.craft_input_frame.grid(column=0, row=0)
-        self.craft_input = CraftInputUI(self.content_frame, self.craft_input_frame)
+        self.craft_input = CraftInputUI(self.content_frame, self.craft_input_frame, None)
 
         # Vertical Separator
         ttk.Separator(self.content_frame, orient="vertical").grid(column=1, row=0, sticky="ns", padx=25, pady=4)
@@ -53,3 +53,6 @@ class CraftItemUI:
         self.craft_display_frame = ttk.Frame(self.content_frame)
         self.craft_display_frame.grid(column=2, row=0)
         self.craft_display = CraftDisplayUI(self.content_frame, self.craft_display_frame)
+
+        # Linking
+        self.craft_input.craft_display_ui = self.craft_display

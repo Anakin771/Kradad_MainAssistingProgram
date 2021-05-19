@@ -11,7 +11,6 @@ that generates a dropped item from a boss.
 ***********************************************
 """
 
-import tkinter as tk
 from tkinter import ttk
 
 from GUI.itemPageUIs.item_dropped_input import DroppedInputUI
@@ -40,7 +39,7 @@ class DroppedItemUI:
         # Input Section
         self.input_frame = ttk.Frame(self.content_frame)
         self.input_frame.grid(column=0, row=0, padx=15, pady=5)
-        self.input = DroppedInputUI(self.root, self.input_frame)
+        self.input = DroppedInputUI(self.root, self.input_frame, None)
 
         # Vertical Separator
         ttk.Separator(self.content_frame, orient="vertical").grid(column=1, row=0, sticky="ns", padx=25, pady=4)
@@ -49,3 +48,6 @@ class DroppedItemUI:
         self.display_frame = ttk.Frame(self.content_frame)
         self.display_frame.grid(column=2, row=0, padx=15, pady=5)
         self.display = DroppedDisplayUI(self.root, self.display_frame)
+
+        # Linking
+        self.input.display_ui = self.display

@@ -14,6 +14,18 @@ that displays the generated crafted item
 import tkinter as tk
 from tkinter import ttk
 
+ITEM_TYPE_MAPPING = {
+    "wpn": "Weapon",
+    "amr": "Armor",
+    "acc": "Accessories"
+}
+
+ITEM_QUALITY_MAPPING = {
+    -7: "Bad",
+    0: "Normal",
+    7: "Great"
+}
+
 
 class CraftDisplayUI:
     def __init__(self, parent, frame):
@@ -35,8 +47,8 @@ class CraftDisplayUI:
         self.content_frame.pack(expand=True, fill="both", padx=60)
 
         # Type & Label Row
-        ttk.Label(self.content_frame, text="[QUALITY] [TYPE] - LV [LV]", style="category_txt.TLabel") \
-            .grid(column=0, row=0, columnspan=3)
+        self.qtl_box = ttk.Label(self.content_frame, text="[QUALITY] [TYPE] - LV [LV]", style="category_txt.TLabel")
+        self.qtl_box.grid(column=0, row=0, columnspan=3)
 
         # HP Row
         ttk.Label(self.content_frame, text="HP: ", style="category_txt.TLabel") \
@@ -80,6 +92,17 @@ class CraftDisplayUI:
         self.placeholder_frame.pack(expand=True, fill="both")
 
     def show_content(self):
-        self.content_frame.pack(expand=True, fill="both")
+        self.content_frame.pack(expand=True, fill="both", padx=40)
         self.placeholder_frame.pack_forget()
 
+    def display(self, item):
+        quality_text = ITEM_QUALITY_MAPPING.get(item['QUALITY'])
+        type_text = ITEM_TYPE_MAPPING.get(item['TYPE'])
+
+        self.qtl_box['text'] = f"{quality_text} Quality {type_text} - LV {item['LV']}"
+        self.hp_box['text'] = item['HP']
+        self.patk_box['text'] = item['PATK']
+        self.matk_box['text'] = item['MATK']
+        self.pdef_box['text'] = item['PDEF']
+        self.mdef_box['text'] = item['MDEF']
+        self.show_content()

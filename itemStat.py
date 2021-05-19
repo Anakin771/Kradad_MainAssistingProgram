@@ -10,7 +10,6 @@ generating items, including stats randomization, item crafting, etc.
 ***********************************************
 """
 
-import numpy as np
 import random
 import math
 
@@ -78,8 +77,8 @@ def random_item_stat(item_lv, item_type, quality_rate=None, show_stat=True):
     roll_choice = ["HP", "PATK", "MATK", "PDEF", "MDEF"]
 
     if item_type == "wpn":
-        rand_variant = np.round(np.random.normal(0, DEVIATION, size=1))[0]
-        variant = int(min(np.abs(rand_variant), 32))
+        rand_variant = round(random.gauss(0, DEVIATION))
+        variant = int(min(abs(rand_variant), 32))
         variant = int(math.copysign(variant, rand_variant))
         roll_weight = WPN_WEIGHT
         roll_weight[1] += variant
@@ -100,6 +99,7 @@ def random_item_stat(item_lv, item_type, quality_rate=None, show_stat=True):
     if quality_rate is not None:
         item.update({"QUALITY": quality_rate})
 
+    # This line is SOOOO REDUNDANT! But is the author's weird preferences ordering dictionary lol
     item.update({
         "HP": 0,
         "PATK": 0,
@@ -126,16 +126,30 @@ def random_item_stat(item_lv, item_type, quality_rate=None, show_stat=True):
         print(f" M. DEF: +{item['MDEF']} pts.")
         print("---------------------------------")
 
+    """
+    # Return Format (For usage in other parts)
+    item = {
+        "LV": lv,
+        "TYPE": type,
+        "QUALITY": quality,
+        "HP": hp,
+        "PATK": patk,
+        "MATK": matk,
+        "PDEF": pdef,
+        "MDEF": mdef
+    }
+    """
     return item
 
 
-def craft_item(material_a, material_b, material_c, player_lv):
+def craft_item(material_a, material_b, material_c, player_lv, show_stat=True):
     """
     Craft an item based on given material type
     :param material_a:
     :param material_b:
     :param material_c:
     :param player_lv:
+    :param show_stat:
     :return:
     """
     type_sum =\
@@ -154,6 +168,7 @@ def craft_item(material_a, material_b, material_c, player_lv):
         player_lv,
         quality_rate=crafted_quality,
         item_type=crafted_type,
+        show_stat=show_stat
     )
 
     return crafted_item
