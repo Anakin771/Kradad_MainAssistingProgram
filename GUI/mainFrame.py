@@ -14,10 +14,10 @@ import tkinter as tk
 from tkinter import ttk
 
 # External GUI file imports:
-from playerPage import PlayerPage
-from bossPage import BossPage
-from itemPage import ItemPage
-from styling import Styling
+from GUI.playerPage import PlayerPage
+from GUI.bossPage import BossPage
+from GUI.itemPage import ItemPage
+from GUI.styling import Styling
 
 VERSION = "1.0.0"
 
@@ -27,7 +27,10 @@ class MainUI:
         # Main GUI Frame
         self.root = tk.Tk()
         self.root.title(f"Game Kradad - Main Assisting Program (v{VERSION})")
-        self.root.iconbitmap("../ico/gkne-mainap-ce-icon.ico")
+        # # PyCharm Test Dir
+        # self.root.iconbitmap("../ico/gkne-mainap-ce-icon.ico")
+        # App Dir
+        self.root.iconbitmap("ico/gkne-mainap-ce-icon.ico")
         self.root.geometry("+200+30")
 
         # Styling

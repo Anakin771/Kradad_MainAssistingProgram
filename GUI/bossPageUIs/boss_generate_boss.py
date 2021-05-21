@@ -10,12 +10,12 @@ that generates a boss fight.
 
 ***********************************************
 """
-import tkinter as tk
+
 from tkinter import ttk
 
 # Non-Builtin Imports
-from GUI.bossPageUIs.boss_boss_input import *
-from GUI.bossPageUIs.boss_cal_reward import *
+from GUI.bossPageUIs.boss_boss_input import BossInputUI
+from GUI.bossPageUIs.boss_cal_reward import RewardCalculationUI
 
 
 class GenerateBossUI:
