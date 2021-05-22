@@ -20,9 +20,10 @@ JIGGLE_LIMIT = 25
 
 
 class BonusRateUI:
-    def __init__(self, parent, frame, action_ui=None):
+    def __init__(self, parent, frame, version, action_ui=None):
         self.parent = parent
         self.frame = frame
+        self.VERSION = version
         self.action_ui = action_ui
         self.jiggle = 0
         self.animation = None

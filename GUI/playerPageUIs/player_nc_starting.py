@@ -20,9 +20,10 @@ JIGGLE_LIMIT = 25
 
 
 class StartingStatsUI:
-    def __init__(self, parent, frame, bnrp_ui=None):
+    def __init__(self, parent, frame, version, bnrp_ui=None):
         self.parent = parent
         self.frame = frame
+        self.VERSION = version
         self.bnrp_ui = bnrp_ui
         self.jiggle = 0
         self.animation = None

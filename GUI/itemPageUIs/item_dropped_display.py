@@ -10,7 +10,7 @@ that displays the generated dropped item
 
 ***********************************************
 """
-
+import random
 from tkinter import ttk
 
 ITEM_TYPE_MAPPING = {
@@ -19,11 +19,18 @@ ITEM_TYPE_MAPPING = {
     "acc": "Accessories"
 }
 
+JIGGLE_LIMIT = 25
+
 
 class DroppedDisplayUI:
-    def __init__(self, parent, frame):
-        self.parent = parent
+    def __init__(self, root, frame, version, input_ui=None):
+        self.root = root
         self.frame = frame
+        self.input_ui = input_ui
+        self.VERSION = version
+
+        self.jiggle = 0
+        self.animation = None
 
         # Display Label Frame
         self.lbf = ttk.LabelFrame(self.frame, text="Item")
@@ -97,3 +104,25 @@ class DroppedDisplayUI:
         self.pdef_box['text'] = f"{item['PDEF']}"
         self.mdef_box['text'] = f"{item['MDEF']}"
         self.show_content()
+
+    def animate(self, callback):
+        if self.jiggle == 0:
+            self.input_ui.generate_btn.configure(state="disabled")
+            callback()
+
+        if self.jiggle >= JIGGLE_LIMIT:
+            self.content_frame.after_cancel(self.animation)
+            self.animation = None
+            self.jiggle = 0
+            self.input_ui.generate_btn.configure(state="enabled")
+            callback()
+        else:
+            num1, num2, num3, num4, num5 = random.sample(range(1, 1000), 5)
+            self.hp_box['text'] = str(num1)
+            self.patk_box['text'] = str(num2)
+            self.matk_box['text'] = str(num3)
+            self.pdef_box['text'] = str(num4)
+            self.mdef_box['text'] = str(num5)
+            self.jiggle += 1
+            self.input_ui.generate_btn.configure(state="disabled")
+            self.animation = self.content_frame.after(50, lambda: self.animate(callback))

@@ -18,9 +18,10 @@ from playerStat import cal_req_xp
 
 
 class LevelUpDisplayUI:
-    def __init__(self, root, frame, lu_input=None):
+    def __init__(self, root, frame, version, lu_input=None):
         self.root = root
         self.frame = frame
+        self.VERSION = version
         self.lu_input = lu_input
 
         # Results Label Frame

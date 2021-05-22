@@ -19,9 +19,10 @@ from GUI.bossPageUIs.boss_cal_reward import RewardCalculationUI
 
 
 class GenerateBossUI:
-    def __init__(self, root, frame, boss_display_ui=None):
+    def __init__(self, root, frame, version, boss_display_ui=None):
         self.root = root
         self.frame = frame
+        self.VERSION = version
         self.boss_display_ui = boss_display_ui
 
         # Header Frame
@@ -43,7 +44,7 @@ class GenerateBossUI:
         # Upper Content - Input Section
         self.boss_input_frame = ttk.Frame(self.upper_content_frame)
         self.boss_input_frame.grid(column=0, row=0)
-        self.boss_input = BossInputUI(self.upper_content_frame, self.boss_input_frame)
+        self.boss_input = BossInputUI(self.upper_content_frame, self.boss_input_frame, version=self.VERSION)
 
         # Upper Separator
         ttk.Separator(self.upper_content_frame, orient="vertical").grid(column=1, row=0, padx=15, sticky="ns")
@@ -51,7 +52,11 @@ class GenerateBossUI:
         # Upper Content - Rewards Calculations & Display
         self.boss_reward_frame = ttk.Frame(self.upper_content_frame)
         self.boss_reward_frame.grid(column=2, row=0)
-        self.boss_reward = RewardCalculationUI(self.upper_content_frame, self.boss_reward_frame)
+        self.boss_reward = RewardCalculationUI(
+            self.upper_content_frame,
+            self.boss_reward_frame,
+            version=self.VERSION
+        )
 
         # Linking
         self.boss_input.reward_cal_ui = self.boss_reward

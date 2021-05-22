@@ -17,9 +17,10 @@ from GUI.bossPageUIs.boss_display import *
 
 
 class BossPage:
-    def __init__(self, root, frame):
+    def __init__(self, root, frame, version):
         self.root = root
         self.frame = frame
+        self.VERSION = version
 
         # Widget Framework
 
@@ -33,11 +34,22 @@ class BossPage:
             relief="groove",
             borderwidth=4
         )
-        self.boss_display = BossDisplayUI(self.container, self.boss_display_frame)
+        self.boss_display = BossDisplayUI(
+            self.container,
+            self.boss_display_frame,
+            version=self.VERSION
+        )
 
         # Generate Boss Fight Section
         self.generate_boss_frame = ttk.Frame(self.container)
-        self.generate_boss = GenerateBossUI(self.container, self.generate_boss_frame, boss_display_ui=self.boss_display)
+        self.generate_boss = GenerateBossUI(
+            self.container,
+            self.generate_boss_frame,
+            boss_display_ui=self.boss_display,
+            version=self.VERSION
+        )
+
+        self.boss_display.input_ui = self.generate_boss.boss_input
 
         # Positioning
         self.generate_boss_frame.pack()

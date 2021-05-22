@@ -18,9 +18,10 @@ from GUI.itemPageUIs.item_craft_item import CraftItemUI
 
 
 class ItemPage:
-    def __init__(self, root, frame):
+    def __init__(self, root, frame, version):
         self.root = root
         self.frame = frame
+        self.VERSION = version
 
         # Container
         self.container = ttk.Frame(self.frame, relief="groove", borderwidth=3)
@@ -30,12 +31,12 @@ class ItemPage:
         # Dropped Item Frame
         self.dropped_item_frame = ttk.Frame(self.container)
         self.dropped_item_frame.pack()
-        self.dropped_item = DroppedItemUI(self.root, self.dropped_item_frame)
+        self.dropped_item = DroppedItemUI(self.root, self.dropped_item_frame, version=self.VERSION)
 
         # Actions Separator
         ttk.Separator(self.container).pack(expand=True, fill="x", padx=20, pady=15)
 
         # Craft Item Box
         self.craft_item_frame = ttk.Frame(self.container)
-        self.craft_item_frame.pack()
-        self.craft_item = CraftItemUI(self.root, self.craft_item_frame)
+        self.craft_item_frame.pack(pady=(0, 30))
+        self.craft_item = CraftItemUI(self.root, self.craft_item_frame, version=self.VERSION)

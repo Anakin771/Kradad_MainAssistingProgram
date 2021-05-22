@@ -20,6 +20,7 @@ class Styling:
 
         # Generic
         self.style.configure("tab_header.TLabel", font=("Lucida Bright", 28, "bold"))
+        self.style.configure("sub_header.TLabel", font=("Lucida Bright", 22, "bold"))
         self.style.configure("tab_subtitle.TLabel", font=("Lucida Bright", 12, "italic"))
         self.style.configure("TNotebook.Tab", font=("Helvetica", 12), width=10, anchor="center")
         self.style.configure("med_header.TLabel", font=("Lucida Bright", 10, "bold"))

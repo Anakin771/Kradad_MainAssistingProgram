@@ -18,9 +18,10 @@ from GUI.itemPageUIs.item_dropped_display import DroppedDisplayUI
 
 
 class DroppedItemUI:
-    def __init__(self, root, frame):
+    def __init__(self, root, frame, version):
         self.root = root
         self.frame = frame
+        self.VERSION = version
 
         # Heading
         # Head Layer
@@ -39,7 +40,7 @@ class DroppedItemUI:
         # Input Section
         self.input_frame = ttk.Frame(self.content_frame)
         self.input_frame.grid(column=0, row=0, padx=15, pady=5)
-        self.input = DroppedInputUI(self.root, self.input_frame, None)
+        self.input = DroppedInputUI(self.root, self.input_frame, version=self.VERSION, display_ui=None)
 
         # Vertical Separator
         ttk.Separator(self.content_frame, orient="vertical").grid(column=1, row=0, sticky="ns", padx=25, pady=4)
@@ -47,7 +48,7 @@ class DroppedItemUI:
         # Item Display Section
         self.display_frame = ttk.Frame(self.content_frame)
         self.display_frame.grid(column=2, row=0, padx=15, pady=5)
-        self.display = DroppedDisplayUI(self.root, self.display_frame)
+        self.display = DroppedDisplayUI(self.root, self.display_frame, self.VERSION, input_ui=self.input)
 
         # Linking
         self.input.display_ui = self.display

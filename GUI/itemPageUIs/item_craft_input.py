@@ -26,10 +26,13 @@ ITEM_TYPE_MAPPING = {
 
 
 class CraftInputUI:
-    def __init__(self, parent, frame, craft_display_ui):
-        self.parent = parent
+    def __init__(self, root, frame, version, craft_display_ui):
+        self.root = root
         self.frame = frame
+        self.VERSION = version
         self.craft_display_ui = craft_display_ui
+
+        self.validate_func = (self.root.register(self.validate_num), '%P')
 
         # Player LV
         # Label
@@ -43,7 +46,9 @@ class CraftInputUI:
             from_=1,
             to=sys.maxsize,
             textvariable=self.player_lv_init,
-            width=14
+            width=14,
+            validate="key",
+            validatecommand=self.validate_func
         )
         self.player_lv_box.grid(column=1, row=0, pady=10)
 
@@ -106,7 +111,7 @@ class CraftInputUI:
 
         # Generate Crafted Item & Display
         item = craft_item(mat_a, mat_b, mat_c, item_lv, show_stat=False)
-        self.craft_display_ui.display(item)
+        self.craft_display_ui.animate(lambda: self.craft_display_ui.display(item))
 
     @staticmethod
     def validate_num(data_in):

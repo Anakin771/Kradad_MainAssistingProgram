@@ -9,7 +9,7 @@ it includes the layout and functions of the interface
 that guides the user into generating a new character stats.
 ***********************************************
 """
-import tkinter as tk
+
 from tkinter import ttk
 
 # Non-builtin Imports:
@@ -18,9 +18,10 @@ from GUI.playerPageUIs.player_nc_bonus import BonusRateUI
 
 
 class NewCharUI:
-    def __init__(self, root, frame):
+    def __init__(self, root, frame, version):
         self.root = root
         self.frame = frame
+        self.VERSION = version
 
         # New Char - Header
         self.new_char_header_frame = ttk.Frame(self.frame)
@@ -44,7 +45,11 @@ class NewCharUI:
         # Detailed Code in player_nc_starting.py
         self.starting_stat_frame = ttk.Frame(self.new_char_content_frame)
         self.starting_stat_frame.grid(column=0, row=0)
-        self.starting_stats = StartingStatsUI(self.new_char_content_frame, self.starting_stat_frame)
+        self.starting_stats = StartingStatsUI(
+            self.new_char_content_frame,
+            self.starting_stat_frame,
+            version=self.VERSION
+        )
 
         # Steps Separator
         ttk.Separator(self.new_char_content_frame, orient="vertical")\
@@ -53,9 +58,14 @@ class NewCharUI:
         # Bonus Rate Section
         self.bonus_rate_frame = ttk.Frame(self.new_char_content_frame)
         self.bonus_rate_frame.grid(column=2, row=0)
-        self.bonus_rate = BonusRateUI(self.new_char_content_frame, self.bonus_rate_frame, self)
+        self.bonus_rate = BonusRateUI(
+            self.new_char_content_frame,
+            self.bonus_rate_frame,
+            version=self.VERSION,
+            action_ui=self
+        )
 
-        # EXTRA: Starting Stats & Bonus Rate UI Linking
+        # Starting Stats & Bonus Rate UI Linking
         self.starting_stats.bnrp_ui = self.bonus_rate
         self.bonus_rate.strts_ui = self.starting_stats
 

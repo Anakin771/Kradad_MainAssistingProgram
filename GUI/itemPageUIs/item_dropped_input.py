@@ -26,9 +26,10 @@ ITEM_TYPE_MAPPING = {
 
 
 class DroppedInputUI:
-    def __init__(self, root, frame, display_ui):
+    def __init__(self, root, frame, version, display_ui=None):
         self.root = root
         self.frame = frame
+        self.VERSION = version
         self.display_ui = display_ui
 
         self.validate_func = (self.root.register(self.validate_num), '%P')
@@ -45,7 +46,9 @@ class DroppedInputUI:
             from_=1,
             to=sys.maxsize,
             textvariable=self.boss_lv_init,
-            width=15
+            width=15,
+            validate="key",
+            validatecommand=self.validate_func
         )
         self.boss_lv_box.grid(column=1, row=0, pady=10)
 
@@ -92,7 +95,7 @@ class DroppedInputUI:
 
         # Generate Item & Display
         item = random_item_stat(item_lv, item_type, show_stat=False)
-        self.display_ui.display(item)
+        self.display_ui.animate(lambda: self.display_ui.display(item))
 
     @staticmethod
     def validate_num(data_in):

@@ -17,9 +17,10 @@ from bossStat import *
 
 
 class RewardCalculationUI:
-    def __init__(self, root, frame):
+    def __init__(self, root, frame, version):
         self.root = root
         self.frame = frame
+        self.VERSION = version
 
         # Container Label Frame
         self.container = ttk.LabelFrame(self.frame, text="Rewards")
@@ -107,4 +108,3 @@ class RewardCalculationUI:
         xp_r, money_r, item_r = calculate_reward(boss_lv, pal, diff)
         self.display(xp_r, money_r, item_r)
 
-    # TODO: Create Method(s) that receives and display calculated reward

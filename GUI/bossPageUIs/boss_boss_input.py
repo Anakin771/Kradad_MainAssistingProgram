@@ -17,13 +17,17 @@ import sys
 # Non-Builtin Imports
 from bossStat import *
 
+JIGGLE_LIMIT = 25
+
 
 class BossInputUI:
-    def __init__(self, root, frame, reward_cal_ui=None, boss_display_ui=None):
+    def __init__(self, root, frame, version, reward_cal_ui=None, boss_display_ui=None):
         self.root = root
         self.frame = frame
+        self.VERSION = version
         self.reward_cal_ui = reward_cal_ui
         self.boss_display_ui = boss_display_ui
+        self.jiggle = 0
 
         self.validate_func = (self.root.register(self.validate_num), '%P')
 

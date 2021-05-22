@@ -16,7 +16,7 @@ aside Python's built-in files and third-party open-sources)
 from CE.commands import *
 import time
 
-VERSION = "1.5.0b"
+VERSION = "1.6.0b"
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

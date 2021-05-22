@@ -24,9 +24,10 @@ TXT_TO_BOOL_ITEM_BONUS_MAPPING = {
 
 
 class LevelUpInputUI:
-    def __init__(self, root, frame, lvl_display_ui=None):
+    def __init__(self, root, frame, version, lvl_display_ui=None):
         self.root = root
         self.frame = frame
+        self.VERSION = version
         self.lvl_display_ui = lvl_display_ui
 
         self.validate_func = (self.root.register(self.validate_num), '%P')

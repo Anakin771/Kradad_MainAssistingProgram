@@ -11,7 +11,6 @@ that generate crafted items
 ***********************************************
 """
 
-import tkinter as tk
 from tkinter import ttk
 
 # Non-builtins
@@ -20,9 +19,10 @@ from GUI.itemPageUIs.item_craft_display import CraftDisplayUI
 
 
 class CraftItemUI:
-    def __init__(self, parent, frame):
-        self.parent = parent
+    def __init__(self, root, frame, version):
+        self.root = root
         self.frame = frame
+        self.VERSION = version
 
         # Header Frame
         self.header_frame = ttk.Frame(self.frame)
@@ -44,7 +44,7 @@ class CraftItemUI:
         # Input Section
         self.craft_input_frame = ttk.Frame(self.content_frame)
         self.craft_input_frame.grid(column=0, row=0)
-        self.craft_input = CraftInputUI(self.content_frame, self.craft_input_frame, None)
+        self.craft_input = CraftInputUI(self.root, self.craft_input_frame, version=self.VERSION, craft_display_ui=None)
 
         # Vertical Separator
         ttk.Separator(self.content_frame, orient="vertical").grid(column=1, row=0, sticky="ns", padx=25, pady=4)
@@ -52,7 +52,12 @@ class CraftItemUI:
         # Display Section
         self.craft_display_frame = ttk.Frame(self.content_frame)
         self.craft_display_frame.grid(column=2, row=0)
-        self.craft_display = CraftDisplayUI(self.content_frame, self.craft_display_frame)
+        self.craft_display = CraftDisplayUI(
+            self.root,
+            self.craft_display_frame,
+            version=self.VERSION,
+            input_ui=self.craft_input
+        )
 
         # Linking
         self.craft_input.craft_display_ui = self.craft_display

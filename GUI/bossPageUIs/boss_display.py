@@ -10,17 +10,24 @@ that displays all bosses that have been generated
 
 ***********************************************
 """
-
+import random
 from tkinter import ttk
 
 # Non Built-in imports:
 from Externals.multiColumn import MultiColumnListbox
 
+JIGGLE_LIMIT = 25
+
 
 class BossDisplayUI:
-    def __init__(self, root, frame):
+    def __init__(self, root, frame, version, input_ui=None):
         self.root = root
         self.frame = frame
+        self.VERSION = version
+        self.input_ui = input_ui
+
+        self.jiggle = 0
+        self.animation = None
 
         # Widget Controls
 
@@ -108,7 +115,7 @@ class BossDisplayUI:
         boss_header = ["Boss", "LV", "HP", "P. ATK", "M.ATK", "P. DEF", 'M. DEF']
         boss_datatype = [0, 1, 1, 1, 1, 1, 1]
 
-        ttk.Label(self.multi_boss_frame, text="-------- MULTI-BOSS FIGHT --------", style="multi_header.TLabel")\
+        ttk.Label(self.multi_boss_frame, text="-------- MULTI-BOSS FIGHT --------", style="multi_header.TLabel") \
             .pack(pady=(0, 10))
 
         self.multi_table_frame = ttk.Frame(self.multi_boss_frame)
@@ -144,27 +151,59 @@ class BossDisplayUI:
     def display(self, boss):
         # Check for Single Boss, which is in dictionary type
         if type(boss) is dict:
-            self.show_single_boss()
-            self.diff_lv_box['text'] = f"{boss['DIFFICULTY'].upper()} DIFFICULTY - LV. {boss['LV']}"
-            self.single_hp['text'] = str(boss['HP'])
-            self.single_patk['text'] = str(boss['PATK'])
-            self.single_matk['text'] = str(boss['MATK'])
-            self.single_pdef['text'] = str(int(boss['PDEF'] / 2))
-            self.single_mdef['text'] = str(int(boss['MDEF'] / 2))
+            self.animate_single(lambda: self.display_single(boss))
         elif type(boss) is list:
-            self.show_multi_boss()
-            boss_info_table = []
-            count = 0
-            for boss_row in boss:
-                current_row = [
-                    f"Boss #{count + 1}",
-                    boss_row['LV'],
-                    boss_row['HP'],
-                    boss_row['PATK'],
-                    boss_row['MATK'],
-                    int(boss_row['PDEF'] / 2),
-                    int(boss_row['MDEF'] / 2)
-                ]
-                boss_info_table.append(current_row)
-                count += 1
-            self.multi_boss_table.update_list(boss_info_table)
+            self.input_ui.generate_btn.configure(state="disabled")
+            self.display_multiple(boss)
+            self.animation = self.single_stats_frame.after(
+                1500,
+                lambda: self.input_ui.generate_btn.configure(state="enabled")
+            )
+
+    def display_single(self, boss_dict):
+        self.show_single_boss()
+        self.diff_lv_box['text'] = f"{boss_dict['DIFFICULTY'].upper()} DIFFICULTY - LV. {boss_dict['LV']}"
+        self.single_hp['text'] = str(boss_dict['HP'])
+        self.single_patk['text'] = str(boss_dict['PATK'])
+        self.single_matk['text'] = str(boss_dict['MATK'])
+        self.single_pdef['text'] = str(int(boss_dict['PDEF'] / 2))
+        self.single_mdef['text'] = str(int(boss_dict['MDEF'] / 2))
+
+    def display_multiple(self, boss_list):
+        self.show_multi_boss()
+        boss_info_table = []
+        count = 0
+        for boss_row in boss_list:
+            current_row = [
+                f"Boss #{count + 1}",
+                boss_row['LV'],
+                boss_row['HP'],
+                boss_row['PATK'],
+                boss_row['MATK'],
+                int(boss_row['PDEF'] / 2),
+                int(boss_row['MDEF'] / 2)
+            ]
+            boss_info_table.append(current_row)
+            count += 1
+        self.multi_boss_table.update_list(boss_info_table)
+
+    def animate_single(self, callback):
+        if self.jiggle == 0:
+            self.show_single_boss()
+            callback()
+
+        if self.jiggle >= JIGGLE_LIMIT:
+            self.single_stats_frame.after_cancel(self.animation)
+            self.animation = None
+            self.jiggle = 0
+            self.input_ui.generate_btn.configure(state="enabled")
+            callback()
+        else:
+            num1, num2, num3, num4 = random.sample(range(1, 2001), 4)
+            self.single_patk['text'] = str(num1)
+            self.single_matk['text'] = str(num2)
+            self.single_pdef['text'] = str(num3)
+            self.single_mdef['text'] = str(num4)
+            self.jiggle += 1
+            self.input_ui.generate_btn.configure(state="disabled")
+            self.animation = self.single_stats_frame.after(50, lambda: self.animate_single(callback))
